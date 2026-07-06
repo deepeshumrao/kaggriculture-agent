@@ -1,0 +1,102 @@
+================================================================================
+KAGGLE CAPSTONE — AI AGENTS: INTENSIVE VIBE CODING CAPSTONE PROJECT
+================================================================================
+Source: https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/overview
+Summary compiled: 2026-07-02
+
+NOTE: The Kaggle page is JavaScript-rendered, so its full body could not be
+scraped directly. This summary is assembled from the page's meta description
+and corroborating public sources (Google blog, Kaggle course page, press
+coverage). Verify exact rules/dates on the live Kaggle page and the official
+course materials, as details may have changed.
+
+--------------------------------------------------------------------------------
+1. GOAL (official one-line description)
+--------------------------------------------------------------------------------
+"Put your course learning into action by building an agent that solves a
+real-world problem, helps people or improves everyday living."
+
+--------------------------------------------------------------------------------
+2. CONTEXT — THE COURSE
+--------------------------------------------------------------------------------
+The capstone caps off the "5-Day AI Agents: Intensive Vibe Coding Course"
+run by Google + Kaggle (course dates cited: June 15-19, 2026). "Vibe coding"
+means using natural language as the primary programming interface to build
+AI agents (rather than writing traditional code line-by-line).
+
+Daily course structure:
+  - Day 1: Introduction to Agents & Vibe Coding — natural-language workflows.
+  - Day 2: Agent Tools & Interoperability — external APIs, code execution,
+           agent-to-agent (A2A) communication.
+  - Day 3: Context Engineering — sessions, skills, memory; long-term memory
+           and state for personalized agents.
+  - Day 4: Agent Quality & Security — testing, guardrails, reliability.
+  - Day 5: Prototype -> Production — cloud deployment and observability.
+
+--------------------------------------------------------------------------------
+3. THE CAPSTONE — "KAGGRICULTURE"
+--------------------------------------------------------------------------------
+A hands-on farming SIMULATION challenge: build and deploy an autonomous agent
+that competes on a LIVE LEADERBOARD. You design an agent that makes decisions
+in the simulated farming environment; performance is scored competitively.
+
+--------------------------------------------------------------------------------
+4. DELIVERABLES / SUBMISSION REQUIREMENTS
+--------------------------------------------------------------------------------
+A submission is expected to include:
+  1. A Kaggle Writeup documenting the agent (how it works, design choices).
+  2. A video explanation of the agent.
+  3. A brief rationale (why you built it the way you did).
+  4. A link to the code (e.g., repo or Kaggle notebook).
+  (Plus the deployed/submitted agent that runs on the live leaderboard.)
+
+--------------------------------------------------------------------------------
+5. TIMELINE
+--------------------------------------------------------------------------------
+  - Capstone goes live: end of Day 5 (cited June 19).
+  - Submissions due: cited June 30.
+  ** Confirm exact deadline on the live Kaggle competition page. **
+
+--------------------------------------------------------------------------------
+6. PREREQUISITES / TECHNICAL REQUIREMENTS
+--------------------------------------------------------------------------------
+  - Prior experience with Python.
+  - Basic AI concepts.
+  - Google AI Studio highly recommended (account required).
+  - A Kaggle account with a VERIFIED PHONE NUMBER (required to participate).
+  - Expected tooling from the course: Google Agent Development Kit (ADK),
+    agent tools/APIs, memory/sessions, deployment + observability.
+
+--------------------------------------------------------------------------------
+7. EVALUATION
+--------------------------------------------------------------------------------
+  - Competitive: agent performance on the live leaderboard (the farming sim).
+  - Submission quality: completeness of writeup, video, rationale, and code.
+
+--------------------------------------------------------------------------------
+8. REWARDS
+--------------------------------------------------------------------------------
+  - Completion earns a badge + certificate on your Kaggle profile.
+  - Top submissions: Kaggle swag and recognition.
+  - (No mention of cash prizes; primarily educational recognition.)
+
+--------------------------------------------------------------------------------
+9. SUGGESTED NEXT STEPS FOR YOUR PROJECT
+--------------------------------------------------------------------------------
+  - Confirm the live rules, exact deadline, and leaderboard mechanics on Kaggle.
+  - Set up: Kaggle account (phone verified) + Google AI Studio.
+  - Scaffold a Google ADK agent project in this folder.
+  - Plan the four deliverables early (writeup, video, rationale, code link).
+
+--------------------------------------------------------------------------------
+SOURCES
+--------------------------------------------------------------------------------
+  - Kaggle competition overview (meta description):
+    https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/
+  - Google blog announcement:
+    https://blog.google/innovation-and-ai/technology/developers-tools/kaggle-genai-intensive-course-vibe-coding-june-2026/
+  - Kaggle 5-Day course page:
+    https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google
+  - TechRepublic coverage:
+    https://www.techrepublic.com/article/news-google-kaggle-ai-agents-course-vibe-coding/
+================================================================================

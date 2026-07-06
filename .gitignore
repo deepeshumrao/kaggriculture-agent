@@ -1,0 +1,24 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Logs & runtime output
+logs/
+*.log
+runs/
+
+# OS / editor
+.DS_Store
+desktop.ini
+.vscode/
+.idea/
+
+# Local-only Claude settings (personal permissions)
+.claude/settings.local.json

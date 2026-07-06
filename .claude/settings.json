@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python scripts/test_llm.py --seed 0 --days 10)",
+      "Bash(KAGGRICULTURE_POLICY=heuristic python -m pytest -q)",
+      "Bash(python -m pytest -v)",
+      "Bash(python -m pytest --durations=20 -q)",
+      "Bash(python scripts/evaluate.py --episodes 100)",
+      "Bash(KAGGRICULTURE_POLICY=heuristic python scripts/evaluate.py --episodes 100)",
+      "Bash(tasklist)",
+      "Bash(taskkill //PID 3596 //F)",
+      "Bash(taskkill /PID 3596 /F)",
+      "Bash(KAGGRICULTURE_POLICY=heuristic python scripts/run_local.py --seed 2 --days 8)",
+      "Bash(KAGGRICULTURE_POLICY=heuristic python -c ' *)",
+      "Bash(echo \"=== Downloads \\(kaggle/starter/zip, recent\\) ===\"; find /c/Users/\"Deepesh Umrao\"/Downloads -maxdepth 2 \\\\\\( -iname \"*kaggle*\" -o -iname \"*starter*\" -o -iname \"*vibecod*\" -o -iname \"*capstone*\" -o -iname \"*agent*\" -o -iname \"*.zip\" -o -iname \"*.ipynb\" \\\\\\) 2>/dev/null | head -40; echo \"\"; echo \"=== Downloads: 15 most recent files ===\"; ls -lt /c/Users/\"Deepesh Umrao\"/Downloads 2>/dev/null | head -16)",
+      "Read(//c/Users/Deepesh Umrao/Downloads/**)",
+      "Bash(ls -la \"C:\\\\Users\\\\Deepesh Umrao\\\\.claude\\\\projects\\\\g--My-Drive-IMPORTANT-5-Day-AI-Agents-Intensive-Vibe-Coding-Course-With-Google-Vibe-Coding-Capstone-Project-Capstone-Project\\\\memory\\\\\" 2>/dev/null && echo \"=== MEMORY.md ===\" && cat \"C:\\\\Users\\\\Deepesh Umrao\\\\.claude\\\\projects\\\\g--My-Drive-IMPORTANT-5-Day-AI-Agents-Intensive-Vibe-Coding-Course-With-Google-Vibe-Coding-Capstone-Project-Capstone-Project\\\\memory\\\\MEMORY.md\" 2>/dev/null)",
+      "Read(//g/My Drive/IMPORTANT/5-Day AI Agents Intensive Vibe Coding Course With Google/Vibe Coding Capstone Project/Capstone Project/**)",
+      "Bash(./.venv/Scripts/python.exe scripts/run_local.py)",
+      "Bash(./.venv/Scripts/python.exe scripts/evaluate.py)",
+      "Bash(KAGGRICULTURE_POLICY=heuristic ./.venv/Scripts/python.exe scripts/evaluate.py --episodes 50)"
+    ]
+  }
+}
