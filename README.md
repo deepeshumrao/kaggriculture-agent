@@ -1,5 +1,6 @@
-# 🌾 Kaggriculture Agent
+# Kaggriculture Agent
 
+![CI](https://github.com/deepeshumrao/kaggriculture-agent/actions/workflows/ci.yml/badge.svg)
 ![tests](https://img.shields.io/badge/tests-66%2F66%20passing-brightgreen)
 ![python](https://img.shields.io/badge/python-3.14-blue)
 ![agent](https://img.shields.io/badge/agent-real%20protocol-brightgreen)
@@ -13,7 +14,7 @@
 > and tested against the real observation/action shapes *before* the competition
 > API was public, using a local simulator that mirrors the real game.
 
-## 🎯 What it does
+## What it does
 
 The game gives the agent one **farmer** on a tile grid. Each turn it returns a
 single command — move a step, or work the tile it stands on — plus optional
@@ -27,7 +28,7 @@ harvest → sell**, aiming to out-earn the opponent.
 
 *Nearest* matters — with only 720 turns, every wasted step is a lost turn.
 
-## 🚀 Quickstart
+## Quickstart
 
 ```bash
 # 1. (optional) create a virtual env
@@ -49,7 +50,7 @@ python -m pytest -q
 
 No API key or network needed — the agent is pure stdlib.
 
-## 🧩 Architecture
+## Architecture
 
 ```
    Kaggle env ──calls──▶ agent(obs) ──returns──▶ {farmer, hands, market}
@@ -77,7 +78,7 @@ No API key or network needed — the agent is pure stdlib.
 > signal, **not** a leaderboard result. The real Kaggle env supplies real
 > mechanics and only calls our `agent(obs)`.
 
-## 🛡️ Reliability & security
+## Reliability & security
 
 - **66 automated tests** covering the game mechanics, agent decisions, and
   submission parity.
@@ -85,7 +86,7 @@ No API key or network needed — the agent is pure stdlib.
   four threat classes: prompt injection, secret leakage, data poisoning, and
   denial-of-wallet.
 
-## 📂 Deliverables (capstone)
+## Deliverables (capstone)
 
 | Deliverable | File |
 |-------------|------|
@@ -94,11 +95,11 @@ No API key or network needed — the agent is pure stdlib.
 | Video script | [`deliverables/video_script.md`](deliverables/video_script.md) |
 | Submission checklist | [`deliverables/submission_checklist.md`](deliverables/submission_checklist.md) |
 
-## 📖 Project history
+## Project history
 
 See [`BUILD_JOURNAL.md`](BUILD_JOURNAL.md) for the full, entry-by-entry build log.
 
-## 📜 License
+## License
 
 MIT — see [`LICENSE`](LICENSE).
 
