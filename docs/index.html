@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaggriculture · Autonomous Farming Agent</title>
+<meta name="description" content="A live, in-browser demo of an autonomous AI farming agent — it plants, waters, weeds, harvests and sells to out-farm an idle baseline." />
+<style>
+  :root {
+    --bg:#f2f0e9; --panel:#fff; --ink:#26302a; --muted:#6f7b70; --line:#d9d6cb;
+    --green:#3f6b4e; --green-dk:#2f5240; --green-lt:#e5ede4;
+    --soil:#cbb79a; --soil-dk:#b39f80; --accent:#557a5f;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.45; }
+  header { padding:18px 24px; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#fbfaf6,#f2f0e9); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  header h1 { margin:0; font-size:20px; letter-spacing:.2px; color:var(--green-dk); font-weight:650; }
+  header .leaf { color:var(--green); }
+  header .sub { color:var(--muted); font-size:13px; }
+  header a { margin-left:auto; color:var(--green-dk); font-size:13px; text-decoration:none; border-bottom:1px dotted var(--muted); }
+  main { max-width:1080px; margin:0 auto; padding:22px 24px 60px; }
+  .bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:20px; }
+  .stat { display:flex; flex-direction:column; min-width:84px; }
+  .stat .k { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .stat .v { font-size:19px; font-weight:650; color:var(--green-dk); font-variant-numeric:tabular-nums; }
+  .spacer { flex:1 1 auto; }
+  label.seed { font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:6px; }
+  input[type=number] { width:58px; font:inherit; padding:7px 8px; border-radius:8px; border:1px solid var(--line); }
+  button { font:inherit; font-weight:600; cursor:pointer; color:#fff; background:var(--green);
+    border:1px solid var(--green-dk); padding:9px 16px; border-radius:9px; transition:background .15s,opacity .15s; }
+  button:hover { background:var(--green-dk); }
+  button.ghost { background:#fff; color:var(--green-dk); }
+  button.ghost:hover { background:var(--green-lt); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  select { font:inherit; padding:8px 10px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); }
+  .farms { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:760px){ .farms { grid-template-columns:1fr; } }
+  .farm { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 16px 18px;
+    box-shadow:0 1px 2px rgba(0,0,0,.03); }
+  .farm.ours { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .farm h2 { margin:0 0 2px; font-size:15px; color:var(--green-dk); }
+  .farm .tag { font-size:11px; color:var(--muted); margin-bottom:12px; }
+  .grid { display:grid; gap:5px; margin:0 auto 14px; width:fit-content; }
+  .tile { width:52px; height:52px; border-radius:8px; position:relative; background:var(--soil);
+    border:1px solid var(--soil-dk); display:flex; align-items:center; justify-content:center;
+    font-size:22px; user-select:none; transition:transform .08s; }
+  .tile.plant { background:var(--green-lt); border-color:#bcd0bd; }
+  .tile.weed { background:#e7e3cf; border-color:#cdc6a3; }
+  .tile.ripe { background:#eef3d8; border-color:#cdd79a; }
+  .tile.farmer { outline:3px solid var(--accent); outline-offset:1px; transform:scale(1.04); z-index:2; }
+  .tile .drop { position:absolute; top:3px; right:4px; font-size:10px; }
+  .rows { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; font-size:13px; }
+  .rows .lab { color:var(--muted); }
+  .rows .val { color:var(--ink); font-variant-numeric:tabular-nums; }
+  .act { margin-top:12px; font-size:12px; color:var(--muted); min-height:16px; }
+  .act code { background:var(--green-lt); color:var(--green-dk); padding:1px 6px; border-radius:5px; }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:18px; font-size:12px; color:var(--muted); }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .sw { width:14px; height:14px; border-radius:4px; border:1px solid var(--soil-dk); }
+  .note { margin-top:22px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="leaf">&#127793;</span> Kaggriculture</h1>
+  <span class="sub">Autonomous AI farming agent &mdash; live in-browser demo</span>
+  <a href="https://github.com/deepeshumrao/kaggriculture-agent" target="_blank" rel="noopener">View source on GitHub &#8599;</a>
+</header>
+
+<main>
+  <div class="bar">
+    <div class="stat"><span class="k">Day</span><span class="v" id="s-day">1</span></div>
+    <div class="stat"><span class="k">Turn</span><span class="v" id="s-turn">0</span></div>
+    <div class="spacer"></div>
+    <label class="seed">seed <input type="number" id="in-seed" value="0" min="0" /></label>
+    <button id="btn-step" class="ghost">Step</button>
+    <button id="btn-play">&#9654; Play</button>
+    <select id="sel-speed" title="steps per tick">
+      <option value="1">1&times; slow</option>
+      <option value="4" selected>4&times;</option>
+      <option value="12">12&times; fast</option>
+      <option value="24">24&times; (1 day)</option>
+    </select>
+    <button id="btn-reset" class="ghost">Reset</button>
+  </div>
+
+  <div class="farms" id="farms"></div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#cbb79a"></i> soil (empty)</span>
+    <span><i class="sw" style="background:#e5ede4"></i> planted</span>
+    <span><i class="sw" style="background:#eef3d8"></i> ripe &#127806;</span>
+    <span><i class="sw" style="background:#e7e3cf"></i> weed</span>
+    <span><i class="sw" style="border:2px solid #557a5f;background:#fff"></i> farmer</span>
+    <span>&#128167; watered today</span>
+  </div>
+
+  <p class="note">
+    Everything runs client-side &mdash; the same decision policy (<b>FarmBrain</b>) and simulator used in the
+    Python/Kaggle build, ported to JavaScript with a faithful Mersenne-Twister RNG. Seed&nbsp;0 plays out to
+    <b>3005 vs an idle baseline&rsquo;s 100</b>, identical to the offline result.
+  </p>
+</main>
+
+<script src="engine.js"></script>
+<script>
+const K = window.Kaggriculture;
+const $ = (id) => document.getElementById(id);
+let env, brain, lastActions = ["—", "—"], playing = false, timer = null;
+
+function newGame() {
+  const seed = parseInt($("in-seed").value, 10) || 0;
+  env = new K.Env(seed, 2);
+  brain = new K.FarmBrain();
+  lastActions = ["—", "—"];
+}
+function stepOnce(times) {
+  for (let i = 0; i < times; i++) {
+    if (env.done()) break;
+    const me = brain.decide(env.observe(0));
+    const opp = K.passAction();
+    lastActions = [K.describe(me), "PASS"];
+    env.step([me, opp]);
+  }
+}
+
+function cropGlyph(crop){ return crop === "CORN" ? "\u{1F33D}" : "\u{1F33E}"; }
+function tileView(tile, day){
+  if (tile === null) return { cls:"empty", glyph:"", drop:false };
+  if (tile.kind === K.P.KIND_WEED) return { cls:"weed", glyph:"\u{1F33F}", drop:false };
+  const age = day - tile.planted_day;
+  const cls = age >= 2 ? "plant ripe" : "plant";
+  const glyph = age >= 2 ? cropGlyph(tile.crop) : (age >= 1 ? "\u{1F331}" : "•");
+  return { cls, glyph, drop: !!tile.watered_today };
+}
+
+function renderFarm(p, isOurs){
+  const farm = env.farms[p], day = env.day;
+  const [fx, fy] = farm.farmer;
+  let cells = "";
+  farm.tiles.forEach((row, y) => row.forEach((tile, x) => {
+    const v = tileView(tile, day);
+    const isFarmer = (x === fx && y === fy);
+    const drop = v.drop ? '<span class="drop">\u{1F4A7}</span>' : "";
+    cells += `<div class="tile ${v.cls}${isFarmer ? ' farmer':''}">${v.glyph}${drop}</div>`;
+  }));
+  const seeds = Object.entries(farm.seeds).map(([k,v])=>`${k} ${v}`).join(", ") || "—";
+  const shed = Object.entries(farm.shed).map(([k,v])=>`${k} ${(+v).toFixed(1)}`).join(", ") || "—";
+  const size = farm.tiles.length;
+  return `
+    <div class="farm ${isOurs?'ours':''}">
+      <h2>${isOurs?'Our Agent':'Idle Opponent'}</h2>
+      <div class="tag">${isOurs?'FarmBrain policy':'does nothing (baseline)'}</div>
+      <div class="grid" style="grid-template-columns:repeat(${size},52px)">${cells}</div>
+      <div class="rows">
+        <span class="lab">Score</span><span class="val"><b>${env.score(p).toFixed(2)}</b></span>
+        <span class="lab">Money</span><span class="val">${farm.money.toFixed(2)}</span>
+        <span class="lab">Seeds</span><span class="val">${seeds}</span>
+        <span class="lab">Shed</span><span class="val">${shed}</span>
+      </div>
+      <div class="act">${isOurs?`last: <code>${lastActions[0]}</code>`:""}</div>
+    </div>`;
+}
+
+function render(){
+  $("s-day").textContent = env.day;
+  $("s-turn").textContent = `${env.turn}/${env.maxTurns}`;
+  $("farms").innerHTML = [0,1].map(p => renderFarm(p, p === 0)).join("");
+  const done = env.done();
+  if (done) stopPlay();
+  $("btn-step").disabled = done;
+  $("btn-play").disabled = done;
+}
+
+function tick(){ stepOnce(parseInt($("sel-speed").value,10)); render(); }
+function startPlay(){ playing = true; $("btn-play").innerHTML = "&#10073;&#10073; Pause"; timer = setInterval(tick, 350); }
+function stopPlay(){ playing = false; $("btn-play").innerHTML = "&#9654; Play"; if (timer){ clearInterval(timer); timer = null; } }
+function reset(){ stopPlay(); newGame(); render(); }
+
+$("btn-step").onclick = tick;
+$("btn-reset").onclick = reset;
+$("in-seed").onchange = reset;
+$("btn-play").onclick = () => playing ? stopPlay() : startPlay();
+
+newGame();
+render();
+</script>
+</body>
+</html>
