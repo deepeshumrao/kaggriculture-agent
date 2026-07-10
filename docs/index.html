@@ -167,6 +167,84 @@
   .win-card .trophy { font-size:76px; animation:ripeBob 1s ease-in-out infinite; }
   .win-card h2 { color:var(--gold-dk); font-size:30px; margin:10px 0; font-weight:700; }
   .win-card .scores { font-size:18px; color:var(--ink); margin:14px 0; font-weight:500; }
+
+  /* ===== Profile chip in header ===== */
+  .profile-chip { display:flex; align-items:center; gap:8px; background:linear-gradient(180deg,#fffdf5,#fff3d6);
+    border:3px solid var(--wood-dk); border-radius:14px; padding:5px 12px 5px 6px; cursor:pointer;
+    box-shadow:0 4px 0 var(--wood-dk); transition:all 0.1s; }
+  .profile-chip:hover { filter:brightness(1.05); }
+  .profile-chip:active { transform:translateY(3px); box-shadow:0 1px 0 var(--wood-dk); }
+  .profile-chip .pav { font-size:24px; line-height:1; }
+  .profile-chip .pinfo { display:flex; flex-direction:column; line-height:1.15; }
+  .profile-chip .pname { font-weight:700; font-size:14px; color:var(--wood-dk); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .profile-chip .pmeta { font-size:10px; color:var(--muted); font-weight:500; }
+
+  /* ===== Sign-in / profile-select overlay ===== */
+  .signin { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--wood); border-radius:24px;
+    padding:28px; max-width:560px; width:100%; box-shadow:0 10px 0 var(--wood-dk),0 20px 40px rgba(0,0,0,0.35);
+    text-align:center; max-height:90vh; overflow-y:auto; }
+  .signin h2 { color:var(--wood-dk); font-size:26px; font-weight:700; margin-bottom:4px; }
+  .signin .tagline { color:var(--muted); font-size:14px; margin-bottom:18px; font-weight:500; }
+  .profile-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-bottom:16px; }
+  .profile-card { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:16px; padding:14px 10px; cursor:pointer;
+    transition:all 0.12s; position:relative; }
+  .profile-card:hover { border-color:var(--green-dk); transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+  .profile-card .av { font-size:42px; line-height:1; }
+  .profile-card .nm { font-weight:700; font-size:15px; color:var(--ink); margin-top:6px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .profile-card .st { font-size:11px; color:var(--muted); font-weight:500; margin-top:2px; }
+  .profile-card .lock { position:absolute; top:6px; right:8px; font-size:13px; }
+  .profile-card .del { position:absolute; top:4px; left:6px; font-size:14px; opacity:0; transition:opacity 0.15s;
+    background:none; border:none; cursor:pointer; }
+  .profile-card:hover .del { opacity:0.7; }
+  .profile-card.new-card { border-style:dashed; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--green-dk); }
+  .profile-card.new-card .av { font-size:38px; }
+
+  .signin .create-form { display:none; flex-direction:column; gap:14px; text-align:left; }
+  .signin .create-form.show { display:flex; }
+  .signin .field label { display:block; font-weight:600; color:var(--wood-dk); font-size:13px; margin-bottom:6px; }
+  .signin input[type=text], .signin input[type=password] { font-family:inherit; width:100%; padding:11px 14px;
+    border-radius:12px; border:3px solid var(--wood-lt); font-size:15px; background:#fff; color:var(--ink); }
+  .avatar-pick { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .avatar-opt { font-size:28px; padding:8px; border-radius:12px; border:3px solid transparent; cursor:pointer;
+    background:#fff; transition:all 0.1s; }
+  .avatar-opt:hover { background:var(--green-lt); }
+  .avatar-opt.selected { border-color:var(--green-dk); background:var(--green-lt); box-shadow:0 0 0 2px var(--gold); }
+  .signin .form-btns { display:flex; gap:10px; justify-content:center; margin-top:4px; }
+  .pin-note { font-size:11px; color:var(--muted); font-weight:400; }
+
+  /* ===== Stats / achievements panel ===== */
+  .stats-panel { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--wood); border-radius:24px;
+    padding:28px; max-width:560px; width:100%; box-shadow:0 10px 0 var(--wood-dk),0 20px 40px rgba(0,0,0,0.35);
+    max-height:90vh; overflow-y:auto; }
+  .stats-panel .sp-head { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .stats-panel .sp-av { font-size:52px; line-height:1; }
+  .stats-panel .sp-name { font-size:24px; font-weight:700; color:var(--wood-dk); }
+  .stats-panel .sp-sub { font-size:13px; color:var(--muted); font-weight:500; }
+  .stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+  .stat-box { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:14px; padding:12px 8px; text-align:center; }
+  .stat-box .num { font-size:24px; font-weight:700; color:var(--green-dk); }
+  .stat-box .lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+  .ach-title { font-weight:700; color:var(--wood-dk); font-size:16px; margin:10px 0 12px; text-align:left; }
+  .ach-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
+  .ach-item { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:14px; padding:12px 8px; text-align:center;
+    opacity:0.4; filter:grayscale(1); transition:all 0.15s; }
+  .ach-item.earned { opacity:1; filter:none; border-color:var(--gold-dk); background:linear-gradient(180deg,#fffbe6,#fff3d6); }
+  .ach-item .aic { font-size:32px; line-height:1; }
+  .ach-item .anm { font-size:12px; font-weight:700; color:var(--ink); margin-top:5px; }
+  .ach-item .ade { font-size:10px; color:var(--muted); margin-top:3px; line-height:1.3; }
+  .sp-actions { display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+
+  /* ===== Achievement toast ===== */
+  .toast-wrap { position:fixed; top:16px; right:16px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast { background:linear-gradient(180deg,#fffbe6,#fff3d6); border:4px solid var(--gold-dk); border-radius:16px;
+    padding:12px 18px; box-shadow:0 6px 20px rgba(0,0,0,0.3); display:flex; align-items:center; gap:12px;
+    animation:toastIn 0.4s ease, toastOut 0.4s ease 3.4s forwards; min-width:240px; }
+  @keyframes toastIn { from{transform:translateX(120%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+  @keyframes toastOut { to{transform:translateX(120%);opacity:0;} }
+  .toast .tic { font-size:34px; }
+  .toast .ttxt .tt1 { font-size:12px; color:var(--gold-dk); font-weight:700; }
+  .toast .ttxt .tt2 { font-size:15px; color:var(--ink); font-weight:700; }
+  .toast .ttxt .tt3 { font-size:11px; color:var(--muted); }
 </style>
 </head>
 <body>
@@ -179,6 +257,13 @@
     <span class="leaf">🌾</span>
     <h1>Kaggriculture</h1>
     <div class="toolbar">
+      <div class="profile-chip" id="profile-chip" title="View profile & stats">
+        <span class="pav" id="chip-av">🧑‍🌾</span>
+        <span class="pinfo">
+          <span class="pname" id="chip-name">Guest</span>
+          <span class="pmeta" id="chip-meta">tap for stats</span>
+        </span>
+      </div>
       <button class="wbtn" id="btn-sound">🔊</button>
       <button class="wbtn gold" id="btn-help">❓ Help</button>
     </div>
@@ -288,11 +373,79 @@
   </div>
 </div>
 
+<!-- Sign-in / profile select -->
+<div class="overlay" id="signin-overlay">
+  <div class="signin">
+    <h2>🌾 Who's Farming?</h2>
+    <div class="tagline">Pick your farmer or create a new one — your progress saves on this device.</div>
+    <div class="profile-grid" id="profile-grid"></div>
+    <div class="create-form" id="create-form">
+      <div class="field">
+        <label>Farmer name</label>
+        <input type="text" id="new-name" maxlength="20" placeholder="e.g. Deepesh" />
+      </div>
+      <div class="field">
+        <label>Choose an avatar</label>
+        <div class="avatar-pick" id="avatar-pick"></div>
+      </div>
+      <div class="field">
+        <label>PIN (optional) <span class="pin-note">— 4 digits to lock this profile on a shared device</span></label>
+        <input type="password" id="new-pin" inputmode="numeric" maxlength="4" placeholder="••••" />
+      </div>
+      <div class="form-btns">
+        <button class="wbtn" id="create-cancel">Back</button>
+        <button class="wbtn gold" id="create-confirm">🌱 Start Farming</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PIN prompt -->
+<div class="overlay" id="pin-overlay">
+  <div class="signin" style="max-width:340px">
+    <h2 id="pin-title">🔒 Enter PIN</h2>
+    <div class="tagline" id="pin-sub">This profile is locked.</div>
+    <input type="password" id="pin-input" inputmode="numeric" maxlength="4" placeholder="••••"
+      style="text-align:center;font-size:24px;letter-spacing:8px;margin-bottom:8px" />
+    <div class="pin-note" id="pin-err" style="color:#c62828;min-height:16px"></div>
+    <div class="form-btns">
+      <button class="wbtn" id="pin-cancel">Back</button>
+      <button class="wbtn gold" id="pin-confirm">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stats / achievements -->
+<div class="overlay" id="stats-overlay">
+  <div class="stats-panel">
+    <div class="sp-head">
+      <span class="sp-av" id="sp-av">🧑‍🌾</span>
+      <div>
+        <div class="sp-name" id="sp-name">Farmer</div>
+        <div class="sp-sub" id="sp-sub"></div>
+      </div>
+    </div>
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="ach-title">🏅 Achievements</div>
+    <div class="ach-grid" id="ach-grid"></div>
+    <div class="sp-actions">
+      <button class="wbtn" id="sp-switch">🔄 Switch Farmer</button>
+      <button class="wbtn" id="sp-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
 <script src="engine.js"></script>
+<script src="profiles.js"></script>
 <script>
 const K = window.Kaggriculture;
+const PR = window.Profiles;
 const $ = id => document.getElementById(id);
 let env, mode, difficulty, currentPlayer = 0, selectedCrop = 'WHEAT', soundOn = true, audioCtx = null;
+let gStats = { harvests:0, crops:{}, earnings:0 };   // player-0 tracking for the active profile
+let gameRecorded = false;
 
 /* ===== SOUND (Web Audio) ===== */
 function initAudio(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
@@ -323,6 +476,8 @@ function newGame(){
   const seed=parseInt($('in-seed').value,10)||0;
   mode=$('sel-mode').value;
   env=new K.Env(seed,2); currentPlayer=0;
+  gStats={ harvests:0, crops:{}, earnings:0 }; gameRecorded=false;
+  $('name-0').textContent = (activeProfile? activeProfile.avatar+' '+activeProfile.name : '🧑‍🌾 Player 1');
   $('name-1').textContent = mode==='single' ? '🤖 Player 2 (AI)' : '🧑‍🌾 Player 2';
   buildCropButtons(); renderAll(); updateControls();
   $('win-banner').classList.remove('show');
@@ -407,13 +562,31 @@ function applyAction(p,action){
   const dShed=sumShed(p)-before.shed;
   if(dShed>0.01) floatOverFarmer(p,`+${dShed.toFixed(1)} 🌾`,'#2e7d32');
   if(dMoney>0.01) floatOverFarmer(p,`+$${dMoney.toFixed(0)}`,'#ff8f00');
+  // track player-0 progress for the active profile
+  if(p===0){
+    if(dShed>0.01){
+      gStats.harvests+=1;
+      const cmd=action.farmer||[];
+      // credit the crop just harvested by inspecting shed delta per crop
+    }
+    if(dMoney>0.01 && action.market && action.market.some(o=>o[0]===K.P.SELL)) gStats.earnings+=dMoney;
+  }
   if(env.done()) endGame();
 }
+// count harvested crop types by watching HARVEST commands land
+function creditHarvest(cropBefore){ /* handled in act() */ }
 function sumShed(p){ let s=0; const sh=env.farms[p].shed; for(const c in sh) s+=sh[c]; return s; }
 function move(dir){ if(!canControl())return; applyAction(currentPlayer,{farmer:[dir],hands:[],market:[]}); SFX.move(); hopFarmer(currentPlayer); }
 function act(cmd,crop){
   if(!canControl())return;
+  // before harvesting, note the crop under player 0's farmer to credit its type
+  let harvestedCrop=null;
+  if(cmd===K.P.HARVEST && currentPlayer===0){
+    const f=env.farms[0], [fx,fy]=f.farmer, t=f.tiles[fy][fx];
+    if(t && t.kind===K.P.KIND_PLANT && (env.day-t.planted_day)>=growDays(t.crop)) harvestedCrop=t.crop;
+  }
   applyAction(currentPlayer,{farmer:crop?[cmd,crop]:[cmd],hands:[],market:[]});
+  if(harvestedCrop) gStats.crops[harvestedCrop]=(gStats.crops[harvestedCrop]||0)+1;
   if(cmd===K.P.PLANT)SFX.plant(); else if(cmd===K.P.WATER)SFX.water();
   else if(cmd===K.P.HARVEST){SFX.harvest();hopFarmer(currentPlayer);} else if(cmd===K.P.DIG)SFX.dig();
 }
@@ -432,6 +605,19 @@ function endGame(){
     : (s0===s1?"It's a Tie!":`Player ${p1?1:2} Wins! 🎉`);
   $('win-scores').innerHTML=`Player 1: <b>${s0.toFixed(0)}</b> · ${mode==='single'?'AI':'Player 2'}: <b>${s1.toFixed(0)}</b>`;
   $('win-banner').classList.add('show'); (p1?SFX.win:SFX.lose)();
+
+  // record into the active profile (player 0 = the signed-in farmer)
+  if(activeProfile && !gameRecorded){
+    gameRecorded=true;
+    const res={
+      won: p1 && s0!==s1, tie: s0===s1, score: s0,
+      harvests: gStats.harvests, earnings: gStats.earnings, crops: gStats.crops,
+      mode: mode, difficulty: difficulty
+    };
+    const out=PR.recordGame(activeProfile.id, res);
+    if(out.profile){ activeProfile=out.profile; updateChip(); }
+    (out.newAchievements||[]).forEach((a,i)=> setTimeout(()=>showToast(a), 600 + i*900));
+  }
 }
 
 /* ===== TUTORIAL ===== */
@@ -492,8 +678,133 @@ document.addEventListener('keydown',e=>{
   else if(k===' '){e.preventDefault();endTurn();}
 });
 
+/* ===== PROFILE SYSTEM ===== */
+let activeProfile = null;
+let pendingProfileId = null;   // profile awaiting PIN
+let createAvatar = PR.AVATARS[0];
+
+function updateChip(){
+  if(activeProfile){
+    $('chip-av').textContent=activeProfile.avatar;
+    $('chip-name').textContent=activeProfile.name;
+    const w=activeProfile.stats.wins, g=activeProfile.stats.games;
+    $('chip-meta').textContent = g>0 ? `${w}W · ${g} games` : 'new farmer';
+  } else {
+    $('chip-av').textContent='🧑‍🌾'; $('chip-name').textContent='Guest'; $('chip-meta').textContent='tap to sign in';
+  }
+}
+
+/* ---- sign-in / profile select ---- */
+function openSignin(){
+  buildProfileGrid();
+  $('create-form').classList.remove('show');
+  $('signin-overlay').classList.add('show');
+}
+function buildProfileGrid(){
+  const grid=$('profile-grid'); grid.innerHTML='';
+  PR.list().forEach(p=>{
+    const card=document.createElement('div'); card.className='profile-card';
+    card.innerHTML=`${p.pin?'<span class="lock">🔒</span>':''}
+      <button class="del" title="Delete">🗑️</button>
+      <div class="av">${p.avatar}</div>
+      <div class="nm">${escapeHtml(p.name)}</div>
+      <div class="st">${p.stats.wins}W / ${p.stats.games}G · best ${p.stats.bestScore.toFixed(0)}</div>`;
+    card.querySelector('.del').onclick=(e)=>{ e.stopPropagation();
+      if(confirm(`Delete farmer "${p.name}"? This erases their progress.`)){ PR.remove(p.id); buildProfileGrid(); } };
+    card.onclick=()=>selectProfile(p.id);
+    grid.appendChild(card);
+  });
+  const add=document.createElement('div'); add.className='profile-card new-card';
+  add.innerHTML=`<div class="av">➕</div><div class="nm">New Farmer</div>`;
+  add.onclick=openCreateForm;
+  grid.appendChild(add);
+}
+function openCreateForm(){
+  $('new-name').value=''; $('new-pin').value=''; createAvatar=PR.AVATARS[0];
+  const pick=$('avatar-pick'); pick.innerHTML='';
+  PR.AVATARS.forEach(av=>{
+    const b=document.createElement('div'); b.className='avatar-opt'+(av===createAvatar?' selected':'');
+    b.textContent=av; b.onclick=()=>{ createAvatar=av;
+      [...pick.children].forEach(c=>c.classList.toggle('selected', c.textContent===av)); };
+    pick.appendChild(b);
+  });
+  $('create-form').classList.add('show');
+  $('new-name').focus();
+}
+function confirmCreate(){
+  const name=$('new-name').value.trim()||'Farmer';
+  const pin=($('new-pin').value||'').replace(/\D/g,'').slice(0,4);
+  const p=PR.create(name, createAvatar, pin);
+  activeProfile=p; PR.setActive(p.id);
+  $('signin-overlay').classList.remove('show');
+  updateChip(); newGame();
+}
+function selectProfile(id){
+  const p=PR.get(id); if(!p) return;
+  if(p.pin){ pendingProfileId=id; $('pin-title').textContent=`🔒 ${p.name}`; $('pin-sub').textContent='Enter your 4-digit PIN.';
+    $('pin-input').value=''; $('pin-err').textContent=''; $('pin-overlay').classList.add('show'); $('pin-input').focus(); }
+  else finishSelect(id);
+}
+function finishSelect(id){
+  activeProfile=PR.get(id); PR.setActive(id);
+  $('signin-overlay').classList.remove('show'); $('pin-overlay').classList.remove('show');
+  updateChip(); newGame();
+}
+function confirmPin(){
+  const pin=$('pin-input').value;
+  if(PR.checkPin(pendingProfileId, pin)) finishSelect(pendingProfileId);
+  else { $('pin-err').textContent='Wrong PIN, try again.'; $('pin-input').value=''; $('pin-input').focus(); }
+}
+
+/* ---- stats / achievements panel ---- */
+function openStats(){
+  if(!activeProfile){ openSignin(); return; }
+  const p=activeProfile, s=p.stats;
+  $('sp-av').textContent=p.avatar; $('sp-name').textContent=p.name;
+  $('sp-sub').textContent=`Win rate ${PR.winRate(p)}% · streak ${s.currentStreak} (best ${s.bestStreak})`;
+  const boxes=[
+    ['Games',s.games],['Wins',s.wins],['Losses',s.losses],
+    ['Best Score',s.bestScore.toFixed(0)],['Harvests',s.totalHarvests],['Earned','$'+s.totalEarnings.toFixed(0)]
+  ];
+  $('stat-grid').innerHTML=boxes.map(b=>`<div class="stat-box"><div class="num">${b[1]}</div><div class="lbl">${b[0]}</div></div>`).join('');
+  $('ach-grid').innerHTML=PR.ACHIEVEMENTS.map(a=>{
+    const got=(p.achievements||[]).indexOf(a.id)!==-1;
+    return `<div class="ach-item${got?' earned':''}"><div class="aic">${got?a.icon:'🔒'}</div>
+      <div class="anm">${a.name}</div><div class="ade">${a.desc}</div></div>`;
+  }).join('');
+  $('stats-overlay').classList.add('show');
+}
+
+/* ---- achievement toast ---- */
+function showToast(a){
+  const wrap=$('toast-wrap');
+  const t=document.createElement('div'); t.className='toast';
+  t.innerHTML=`<div class="tic">${a.icon}</div><div class="ttxt">
+    <div class="tt1">🏅 ACHIEVEMENT UNLOCKED</div><div class="tt2">${a.name}</div><div class="tt3">${a.desc}</div></div>`;
+  wrap.appendChild(t);
+  if(soundOn && audioCtx){ [784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,0.15,'triangle',0.15),i*80)); }
+  setTimeout(()=>t.remove(),3900);
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---- profile wiring ---- */
+$('profile-chip').onclick=openStats;
+$('create-cancel').onclick=()=>$('create-form').classList.remove('show');
+$('create-confirm').onclick=confirmCreate;
+$('pin-cancel').onclick=()=>{ $('pin-overlay').classList.remove('show'); };
+$('pin-confirm').onclick=confirmPin;
+$('pin-input').addEventListener('keydown',e=>{ if(e.key==='Enter')confirmPin(); });
+$('new-name').addEventListener('keydown',e=>{ if(e.key==='Enter')confirmCreate(); });
+$('sp-close').onclick=()=>$('stats-overlay').classList.remove('show');
+$('sp-switch').onclick=()=>{ $('stats-overlay').classList.remove('show'); openSignin(); };
+
+/* ===== BOOT ===== */
+activeProfile = PR.getActive();
+updateChip();
 newGame();
-if(!localStorage.getItem('kagg_played')){ showTutorial(); localStorage.setItem('kagg_played','1'); }
+if(!activeProfile){ openSignin(); }
+else if(!localStorage.getItem('kagg_played')){ showTutorial(); localStorage.setItem('kagg_played','1'); }
 </script>
 </body>
 </html>
