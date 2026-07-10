@@ -122,11 +122,38 @@
     farm_size: 5, turns_per_day: 24, max_days: 30, mature_days: 2,
     weed_prob_per_day: 0.30, dry_yield_factor: 0.5,
     crops: {
-      WHEAT: { seed_cost: 10.0, sell_price: 15.0, base_yield: 3.0 },
-      CORN: { seed_cost: 15.0, sell_price: 26.0, base_yield: 3.0 }
+      WHEAT: { seed_cost: 10.0, sell_price: 15.0, base_yield: 3.0, grow_days: 2 },
+      CORN: { seed_cost: 15.0, sell_price: 26.0, base_yield: 3.0, grow_days: 3 },
+      TOMATO: { seed_cost: 20.0, sell_price: 35.0, base_yield: 2.5, grow_days: 4 },
+      RICE: { seed_cost: 12.0, sell_price: 18.0, base_yield: 3.5, grow_days: 3 }
     },
     start_money: 100.0, start_seeds: { WHEAT: 4 }
   };
+
+  function setDifficulty(level) {
+    if (level === 'easy') {
+      MECH.start_money = 150.0;
+      MECH.weed_prob_per_day = 0.20;
+      MECH.crops.WHEAT.sell_price = 18.0;
+      MECH.crops.CORN.sell_price = 30.0;
+      MECH.crops.TOMATO.sell_price = 40.0;
+      MECH.crops.RICE.sell_price = 22.0;
+    } else if (level === 'hard') {
+      MECH.start_money = 80.0;
+      MECH.weed_prob_per_day = 0.45;
+      MECH.crops.WHEAT.sell_price = 12.0;
+      MECH.crops.CORN.sell_price = 22.0;
+      MECH.crops.TOMATO.sell_price = 30.0;
+      MECH.crops.RICE.sell_price = 15.0;
+    } else { // medium (default)
+      MECH.start_money = 100.0;
+      MECH.weed_prob_per_day = 0.30;
+      MECH.crops.WHEAT.sell_price = 15.0;
+      MECH.crops.CORN.sell_price = 26.0;
+      MECH.crops.TOMATO.sell_price = 35.0;
+      MECH.crops.RICE.sell_price = 18.0;
+    }
+  }
 
   // ---- environment ------------------------------------------------------- //
   function Env(seed, nPlayers) {
@@ -219,9 +246,10 @@
     if (verb === P.WATER) {
       if (tile && tile.kind === P.KIND_PLANT && !tile.watered_today) { tile.watered_today = true; tile._waterings += 1; }
     } else if (verb === P.HARVEST) {
-      if (tile && tile.kind === P.KIND_PLANT && (this.day - tile.planted_day) >= this.mech.mature_days) {
+      var grow = (this.mech.crops[tile && tile.crop] || {}).grow_days || this.mech.mature_days;
+      if (tile && tile.kind === P.KIND_PLANT && (this.day - tile.planted_day) >= grow) {
         var crop = tile.crop, spec = this.mech.crops[crop];
-        var need = Math.max(1, this.mech.mature_days);
+        var need = Math.max(1, grow);
         var waterRatio = Math.min(1.0, tile._waterings / need);
         var factor = this.mech.dry_yield_factor + (1.0 - this.mech.dry_yield_factor) * waterRatio;
         var amount = spec.base_yield * factor;
@@ -329,7 +357,7 @@
     return parts.join(" | ");
   }
 
-  var API = { MT: MT, Env: Env, FarmBrain: FarmBrain, P: P, passAction: passAction, describe: describe, MECH: MECH };
+  var API = { MT: MT, Env: Env, FarmBrain: FarmBrain, P: P, passAction: passAction, describe: describe, MECH: MECH, setDifficulty: setDifficulty };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
   else root.Kaggriculture = API;
 })(typeof window !== "undefined" ? window : this);
