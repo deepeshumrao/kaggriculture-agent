@@ -3,380 +3,393 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kaggriculture — Farm Frenzy!</title>
-<meta name="description" content="A playful farming game — plant, water, harvest, and outscore your rival!" />
+<title>Kaggriculture — Strategic Farming</title>
+<meta name="description" content="A strategic farming game — plant, irrigate, harvest, and outperform your rival." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:#3d2817; --muted:#7a6a4f;
-    --green:#5cb85c; --green-dk:#3d8b3d; --green-lt:#e8f8d8;
-    --soil:#a0673a; --soil-dk:#7a4e2a; --soil-lt:#c48a5a;
-    --grass:#7ec850; --grass-dk:#5aa832;
-    --wood:#a9713b; --wood-dk:#7c4f24; --wood-lt:#c99055;
-    --gold:#ffc107; --gold-dk:#ff8f00; --water:#4fc3f7;
-    --sky1:#7ec7f0; --sky2:#a8e0ff;
+    --ink:#1f2a23; --muted:#6d7a6e; --faint:#8a968b;
+    --paper:#f6f4ee; --panel:#ffffff; --line:#e4e0d6; --line-2:#eeebe2;
+    --green:#3a7d5c; --green-dk:#2b5e45; --green-lt:#eef3ee; --green-mid:#4f9673;
+    --soil:#9a7a56; --soil-dk:#7c5f40; --soil-lt:#b39271; --soil-bare:#c8b291;
+    --gold:#c99a2e; --gold-dk:#a87d1e; --gold-lt:#f2e6c4;
+    --water:#3f9fd4; --danger:#b0563f;
+    /* neutral surface shadows for depth without cartoon bevels */
+    --sh-sm:0 1px 2px rgba(31,42,35,0.06),0 1px 1px rgba(31,42,35,0.04);
+    --sh-md:0 4px 14px rgba(31,42,35,0.08),0 1px 3px rgba(31,42,35,0.05);
+    --sh-lg:0 12px 40px rgba(31,42,35,0.16);
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body {
-    font-family:'Fredoka',system-ui,sans-serif; color:var(--ink); min-height:100vh; overflow-x:hidden;
-    background:linear-gradient(180deg,#5bb8e8 0%,#8ad4f0 30%,#b6e88a 62%,#7ec850 100%);
-    position:relative;
+    font-family:'Inter',system-ui,sans-serif; color:var(--ink); min-height:100vh; overflow-x:hidden;
+    background:var(--paper);
+    background-image:radial-gradient(circle at 15% 0%, #eef2ea 0%, transparent 45%),
+                     radial-gradient(circle at 85% 5%, #f0ede3 0%, transparent 40%);
+    position:relative; letter-spacing:-0.01em;
   }
-  /* floating clouds */
-  .cloud { position:fixed; top:0; font-size:60px; opacity:0.85; pointer-events:none; z-index:0;
-    animation:drift linear infinite; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.08)); }
-  @keyframes drift { from{transform:translateX(-120px);} to{transform:translateX(105vw);} }
-  .cloud.c1 { top:60px; animation-duration:38s; }
-  .cloud.c2 { top:110px; animation-duration:52s; animation-delay:-14s; font-size:44px; }
-  .cloud.c3 { top:40px; animation-duration:64s; animation-delay:-30s; font-size:72px; }
+  .cloud { display:none; }   /* removed cartoon clouds */
 
-  header { position:relative; z-index:5; display:flex; justify-content:center; padding:16px; }
+  header { position:relative; z-index:5; display:flex; justify-content:center; padding:20px 16px 8px; }
   .signboard {
-    background:linear-gradient(180deg,var(--wood-lt),var(--wood)); border:5px solid var(--wood-dk);
-    border-radius:18px; padding:12px 28px; box-shadow:0 8px 0 var(--wood-dk),0 14px 20px rgba(0,0,0,0.25);
-    display:flex; align-items:center; gap:14px; flex-wrap:wrap; max-width:100%;
+    background:transparent; border:none; border-radius:0; padding:0; box-shadow:none;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap; max-width:1000px; width:100%;
   }
-  .signboard h1 { color:#fff; font-size:28px; font-weight:700; text-shadow:0 2px 0 var(--wood-dk),0 3px 4px rgba(0,0,0,0.3); letter-spacing:0.5px; }
-  .signboard .leaf { font-size:30px; }
-  .signboard .toolbar { display:flex; gap:8px; }
+  .brand { display:flex; align-items:center; gap:11px; }
+  .brand .mark { width:38px; height:38px; border-radius:11px; display:grid; place-items:center;
+    background:linear-gradient(150deg,var(--green-mid),var(--green-dk)); box-shadow:var(--sh-sm); }
+  .signboard h1 { font-family:'Sora',sans-serif; color:var(--ink); font-size:22px; font-weight:700; letter-spacing:-0.02em; }
+  .signboard h1 .accent { color:var(--green); }
+  .signboard .sub { color:var(--faint); font-size:12.5px; font-weight:500; margin-top:1px; }
+  .signboard .toolbar { display:flex; gap:8px; margin-left:auto; align-items:center; }
   .wbtn {
-    font-family:inherit; font-weight:600; font-size:14px; cursor:pointer; color:#fff;
-    background:linear-gradient(180deg,var(--green),var(--green-dk)); border:3px solid var(--green-dk);
-    border-radius:12px; padding:8px 14px; box-shadow:0 4px 0 var(--green-dk); transition:all 0.1s;
+    font-family:inherit; font-weight:600; font-size:13.5px; cursor:pointer; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:9px 15px;
+    box-shadow:var(--sh-sm); transition:all 0.14s; display:inline-flex; align-items:center; gap:7px;
   }
-  .wbtn:hover { filter:brightness(1.08); }
-  .wbtn:active { transform:translateY(3px); box-shadow:0 1px 0 var(--green-dk); }
-  .wbtn.gold { background:linear-gradient(180deg,var(--gold),var(--gold-dk)); border-color:var(--gold-dk); box-shadow:0 4px 0 var(--gold-dk); color:#5a3d00; }
-  .wbtn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:0 4px 0 rgba(0,0,0,0.2); }
+  .wbtn:hover { border-color:var(--green); color:var(--green-dk); }
+  .wbtn:active { transform:translateY(1px); }
+  .wbtn.gold { background:var(--green); border-color:var(--green-dk); color:#fff; }
+  .wbtn.gold:hover { background:var(--green-dk); color:#fff; }
+  .wbtn:disabled { opacity:0.45; cursor:not-allowed; }
+  .wbtn.icon-only { padding:9px; }
+  .wbtn svg { display:block; }
 
-  main { position:relative; z-index:5; display:flex; flex-direction:column; align-items:center; padding:8px 16px 40px; }
+  main { position:relative; z-index:5; display:flex; flex-direction:column; align-items:center; padding:8px 16px 48px; }
 
   .setup {
-    background:rgba(255,255,255,0.92); border:4px solid var(--wood); border-radius:16px;
-    padding:12px 18px; margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
-    box-shadow:0 6px 0 rgba(124,79,36,0.3);
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:12px 16px; margin-bottom:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+    box-shadow:var(--sh-sm);
   }
-  .setup label { font-weight:600; color:var(--wood-dk); font-size:14px; }
+  .setup label { font-weight:600; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0.04em; }
   .setup select, .setup input {
-    font-family:inherit; padding:8px 12px; border-radius:10px; border:3px solid var(--wood-lt);
-    font-size:14px; font-weight:500; background:#fffdf5; color:var(--ink);
+    font-family:inherit; padding:9px 12px; border-radius:9px; border:1px solid var(--line);
+    font-size:14px; font-weight:500; background:var(--paper); color:var(--ink);
   }
+  .setup select:focus, .setup input:focus { outline:none; border-color:var(--green); }
 
   .game-container { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-start; }
   .farm-panel {
-    background:rgba(255,255,255,0.95); border:5px solid var(--wood); border-radius:20px; padding:16px;
-    box-shadow:0 8px 0 var(--wood-dk),0 12px 24px rgba(0,0,0,0.2); display:flex; flex-direction:column; gap:10px; min-width:340px;
-    transition:transform 0.2s;
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:18px;
+    box-shadow:var(--sh-md); display:flex; flex-direction:column; gap:12px; min-width:340px;
+    transition:box-shadow 0.2s, border-color 0.2s;
   }
-  .farm-panel.active { border-color:var(--gold-dk); box-shadow:0 8px 0 var(--gold-dk),0 0 0 4px var(--gold),0 12px 24px rgba(0,0,0,0.2); }
+  .farm-panel.active { border-color:var(--green); box-shadow:var(--sh-md),0 0 0 2px rgba(58,125,92,0.14); }
   .farm-header { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .farm-header h2 { color:var(--wood-dk); font-size:17px; font-weight:700; }
+  .farm-header h2 { font-family:'Sora',sans-serif; color:var(--ink); font-size:15.5px; font-weight:600; display:flex; align-items:center; gap:8px; }
   .coin-badge {
-    background:linear-gradient(180deg,var(--gold),var(--gold-dk)); color:#5a3d00; font-weight:700;
-    padding:5px 12px; border-radius:14px; border:2px solid var(--gold-dk); font-size:16px;
-    box-shadow:0 3px 0 rgba(255,143,0,0.5); display:flex; align-items:center; gap:4px;
+    background:var(--gold-lt); color:var(--gold-dk); font-weight:700;
+    padding:5px 12px 5px 8px; border-radius:10px; border:1px solid rgba(201,154,46,0.4); font-size:15px;
+    display:flex; align-items:center; gap:6px; font-variant-numeric:tabular-nums;
   }
+  .coin-badge svg { display:block; }
   .grid {
-    display:grid; gap:5px; width:fit-content; margin:0 auto; position:relative;
-    background:linear-gradient(180deg,var(--grass),var(--grass-dk)); padding:10px; border-radius:14px;
-    box-shadow:inset 0 3px 8px rgba(0,0,0,0.2); border:3px solid var(--grass-dk);
+    display:grid; gap:6px; width:fit-content; margin:0 auto; position:relative;
+    background:var(--green-lt); padding:12px; border-radius:14px; border:1px solid var(--line);
   }
   .tile {
-    width:56px; height:56px; border-radius:10px; position:relative; cursor:pointer;
-    background:linear-gradient(180deg,var(--soil-lt),var(--soil)); border:2px solid var(--soil-dk);
-    display:flex; align-items:center; justify-content:center; font-size:30px; user-select:none;
-    box-shadow:inset 0 -3px 4px rgba(0,0,0,0.15),0 2px 3px rgba(0,0,0,0.1); transition:all 0.12s;
+    width:56px; height:56px; border-radius:9px; position:relative; cursor:pointer;
+    background:var(--soil-bare); border:1px solid rgba(124,95,64,0.35);
+    display:flex; align-items:center; justify-content:center; user-select:none;
+    box-shadow:inset 0 1px 2px rgba(124,95,64,0.25); transition:transform 0.12s, box-shadow 0.12s, border-color 0.12s;
   }
-  .tile:hover { transform:translateY(-2px) scale(1.04); }
-  .tile.plant { background:linear-gradient(180deg,#d4f5b0,var(--green-lt)); border-color:var(--green-dk); }
-  .tile.weed { background:linear-gradient(180deg,#e6ee9c,#c0ca33); border-color:#827717; }
-  .tile.ripe { background:linear-gradient(180deg,#fff59d,#ffe082); border-color:var(--gold-dk); animation:ripeBob 1.2s ease-in-out infinite; }
-  @keyframes ripeBob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-4px);} }
-  .tile.farmer { outline:4px solid var(--gold-dk); outline-offset:2px; z-index:10;
-    box-shadow:0 0 16px rgba(255,143,0,0.8),inset 0 -3px 4px rgba(0,0,0,0.15); }
-  .tile.hop { animation:hop 0.25s ease; }
-  @keyframes hop { 0%{transform:translateY(0);} 40%{transform:translateY(-9px) scale(1.08);} 100%{transform:translateY(0);} }
-  .tile .emoji { line-height:1; }
-  .tile .drop { position:absolute; top:2px; right:3px; font-size:14px; }
-  .tile .age { position:absolute; bottom:1px; left:4px; font-size:9px; color:var(--wood-dk); font-weight:700;
-    background:rgba(255,255,255,0.7); padding:0 3px; border-radius:5px; }
+  .tile svg { display:block; }
+  .tile:hover { transform:translateY(-1px); box-shadow:0 3px 8px rgba(31,42,35,0.12); }
+  .tile.plant { background:#eaf3e2; border-color:rgba(58,125,92,0.35); }
+  .tile.weed { background:#eef0dc; border-color:rgba(124,138,58,0.4); }
+  .tile.ripe { background:#f7f0d6; border-color:var(--gold); box-shadow:0 0 0 1px rgba(201,154,46,0.35),inset 0 1px 2px rgba(201,154,46,0.2); }
+  .tile.ripe svg { animation:ripeBob 1.6s ease-in-out infinite; }
+  @keyframes ripeBob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-3px);} }
+  .tile.farmer { border-color:var(--green); box-shadow:0 0 0 2px var(--green),0 4px 10px rgba(43,94,69,0.28); z-index:10; }
+  .tile.hop svg { animation:hop 0.25s ease; }
+  @keyframes hop { 0%{transform:translateY(0);} 45%{transform:translateY(-7px) scale(1.06);} 100%{transform:translateY(0);} }
+  .tile .drop { position:absolute; top:2px; right:2px; }
+  .tile .age { position:absolute; bottom:1px; left:3px; font-size:9px; color:var(--soil-dk); font-weight:700;
+    background:rgba(255,255,255,0.8); padding:0 3px; border-radius:4px; font-variant-numeric:tabular-nums; }
 
   /* floating +money popups */
-  .float { position:absolute; font-weight:700; font-size:18px; pointer-events:none; z-index:30;
-    animation:floatUp 1s ease-out forwards; text-shadow:0 2px 3px rgba(0,0,0,0.3); }
-  @keyframes floatUp { 0%{transform:translateY(0) scale(0.6);opacity:0;} 20%{opacity:1;transform:translateY(-6px) scale(1.1);}
-    100%{transform:translateY(-46px) scale(1);opacity:0;} }
+  .float { position:absolute; font-weight:700; font-size:16px; pointer-events:none; z-index:30;
+    animation:floatUp 1s ease-out forwards; font-variant-numeric:tabular-nums; }
+  @keyframes floatUp { 0%{transform:translateY(0) scale(0.7);opacity:0;} 20%{opacity:1;transform:translateY(-4px) scale(1);}
+    100%{transform:translateY(-42px);opacity:0;} }
 
-  .stats { display:grid; grid-template-columns:auto 1fr; gap:5px 12px; font-size:14px;
-    background:var(--green-lt); padding:11px; border-radius:12px; border:2px solid #c5e8a0; }
+  .stats { display:grid; grid-template-columns:auto 1fr; gap:7px 12px; font-size:13.5px;
+    background:var(--paper); padding:13px 14px; border-radius:11px; border:1px solid var(--line-2); }
   .stats .k { color:var(--muted); font-weight:500; }
-  .stats .v { color:var(--ink); font-weight:700; }
+  .stats .v { color:var(--ink); font-weight:600; text-align:right; font-variant-numeric:tabular-nums; }
 
-  .controls { background:rgba(255,255,255,0.95); border:5px solid var(--wood); border-radius:20px; padding:16px;
-    box-shadow:0 8px 0 var(--wood-dk),0 12px 24px rgba(0,0,0,0.2); display:flex; flex-direction:column; gap:12px; min-width:230px; }
-  .controls h3 { color:var(--wood-dk); font-size:16px; font-weight:700; text-align:center; }
-  .keys { display:grid; grid-template-columns:repeat(3,54px); gap:6px; justify-content:center; }
-  .key { background:linear-gradient(180deg,#fff,#f0ead8); border:3px solid var(--wood-lt); border-radius:10px;
-    padding:8px 4px; text-align:center; font-weight:700; color:var(--wood-dk); font-size:11px; box-shadow:0 3px 0 rgba(124,79,36,0.2); }
-  .key.center { background:linear-gradient(180deg,var(--gold),var(--gold-dk)); color:#5a3d00; border-color:var(--gold-dk); }
-  .crop-picker { display:flex; flex-direction:column; gap:6px; }
-  .crop-picker .label { font-size:12px; color:var(--muted); font-weight:600; text-align:center; }
-  .crop-btns { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-  .crop-btn { font-family:inherit; padding:8px 6px; border-radius:10px; border:3px solid #e0d6bd; background:#fffdf5;
-    cursor:pointer; font-size:12px; font-weight:600; color:var(--ink); transition:all 0.12s; text-align:left; }
-  .crop-btn:hover { border-color:var(--green); transform:translateY(-1px); }
-  .crop-btn.selected { background:var(--green-lt); border-color:var(--green-dk); box-shadow:0 0 0 2px var(--gold); }
-  .crop-btn .price { display:block; font-size:10px; color:var(--muted); font-weight:400; }
-  .actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
-  .actions button { font-family:inherit; padding:10px 6px; border-radius:12px; font-weight:600; cursor:pointer;
-    border:3px solid var(--green-dk); background:linear-gradient(180deg,var(--green),var(--green-dk)); color:#fff;
-    font-size:12px; box-shadow:0 4px 0 var(--green-dk); transition:all 0.1s; }
-  .actions button:hover { filter:brightness(1.08); }
-  .actions button:active { transform:translateY(3px); box-shadow:0 1px 0 var(--green-dk); }
-  .actions button:disabled { opacity:0.45; cursor:not-allowed; transform:none; }
-  .hint { font-size:11px; color:var(--muted); text-align:center; line-height:1.5; font-weight:500; }
+  .controls { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:18px;
+    box-shadow:var(--sh-md); display:flex; flex-direction:column; gap:14px; min-width:236px; }
+  .controls h3 { font-family:'Sora',sans-serif; color:var(--ink); font-size:14px; font-weight:600; letter-spacing:0.01em; }
+  .keys { display:grid; grid-template-columns:repeat(3,52px); gap:6px; justify-content:center; }
+  .key { background:var(--paper); border:1px solid var(--line); border-radius:9px;
+    padding:8px 4px; text-align:center; font-weight:600; color:var(--muted); font-size:11px; }
+  .key.center { background:var(--green); color:#fff; border-color:var(--green-dk); }
+  .crop-picker { display:flex; flex-direction:column; gap:7px; }
+  .crop-picker .label { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+  .crop-btns { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .crop-btn { font-family:inherit; padding:9px 9px; border-radius:10px; border:1px solid var(--line); background:var(--panel);
+    cursor:pointer; font-size:12.5px; font-weight:600; color:var(--ink); transition:all 0.12s; text-align:left;
+    display:flex; align-items:center; gap:8px; }
+  .crop-btn:hover { border-color:var(--green); }
+  .crop-btn.selected { background:var(--green-lt); border-color:var(--green); box-shadow:inset 0 0 0 1px var(--green); }
+  .crop-btn .cb-body { display:flex; flex-direction:column; line-height:1.25; }
+  .crop-btn .price { font-size:10px; color:var(--muted); font-weight:500; font-variant-numeric:tabular-nums; }
+  .crop-btn svg { flex:0 0 auto; }
+  .actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .actions button { font-family:inherit; padding:11px 8px; border-radius:10px; font-weight:600; cursor:pointer;
+    border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    font-size:13px; transition:all 0.12s; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .actions button .kbd { font-size:10px; color:var(--faint); font-weight:600; border:1px solid var(--line);
+    border-radius:4px; padding:0 4px; }
+  .actions button:hover { border-color:var(--green); color:var(--green-dk); background:var(--green-lt); }
+  .actions button:active { transform:translateY(1px); }
+  .actions button:disabled { opacity:0.4; cursor:not-allowed; }
+  .hint { font-size:11.5px; color:var(--faint); text-align:center; line-height:1.5; font-weight:500; }
 
-  .legend { background:rgba(255,255,255,0.92); border:3px solid var(--wood-lt); border-radius:14px; padding:12px 18px;
-    display:flex; gap:14px; flex-wrap:wrap; justify-content:center; font-size:12px; margin-top:16px; font-weight:500;
-    box-shadow:0 4px 0 rgba(124,79,36,0.2); }
-  .legend span { display:flex; align-items:center; gap:5px; color:var(--muted); }
-  .legend .sw { width:20px; height:20px; border-radius:5px; border:2px solid var(--soil-dk); display:inline-block; }
+  .legend { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 18px;
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center; font-size:12px; margin-top:18px; font-weight:500;
+    box-shadow:var(--sh-sm); max-width:820px; }
+  .legend span { display:flex; align-items:center; gap:6px; color:var(--muted); }
+  .legend .sw { width:22px; height:22px; border-radius:6px; border:1px solid var(--line); display:inline-flex;
+    align-items:center; justify-content:center; background:var(--soil-bare); }
+  .legend .sw svg { width:18px; height:18px; }
 
-  .overlay { position:fixed; inset:0; background:rgba(61,40,23,0.7); display:none; align-items:center;
-    justify-content:center; z-index:100; padding:20px; backdrop-filter:blur(3px); }
+  .overlay { position:fixed; inset:0; background:rgba(31,42,35,0.42); display:none; align-items:center;
+    justify-content:center; z-index:100; padding:20px; backdrop-filter:blur(6px); }
   .overlay.show { display:flex; }
-  .tutorial { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--wood); border-radius:24px;
-    padding:30px; max-width:520px; box-shadow:0 10px 0 var(--wood-dk),0 20px 40px rgba(0,0,0,0.35); text-align:center; }
-  .tutorial .dots { display:flex; gap:6px; justify-content:center; margin-bottom:8px; }
-  .tutorial .dot { width:9px; height:9px; border-radius:50%; background:#e0d6bd; }
-  .tutorial .dot.active { background:var(--green); }
-  .tutorial .step-icon { font-size:60px; margin:12px 0; animation:hop 0.5s ease; }
-  .tutorial h2 { color:var(--wood-dk); font-size:24px; margin-bottom:8px; font-weight:700; }
-  .tutorial p { color:var(--ink); line-height:1.6; margin-bottom:12px; font-size:15px; font-weight:400; }
-  .tutorial .highlight { background:var(--gold); padding:2px 8px; border-radius:6px; font-weight:600; }
+  .card-base { background:var(--panel); border:1px solid var(--line); border-radius:18px;
+    box-shadow:var(--sh-lg); max-height:90vh; overflow-y:auto; }
+  .tutorial { padding:30px; max-width:480px; text-align:center; }
+  .tutorial .dots { display:flex; gap:6px; justify-content:center; margin-bottom:16px; }
+  .tutorial .dot { width:7px; height:7px; border-radius:50%; background:var(--line); transition:all 0.2s; }
+  .tutorial .dot.active { background:var(--green); width:20px; border-radius:4px; }
+  .tutorial .step-icon { width:64px; height:64px; margin:6px auto 14px; border-radius:16px; display:grid; place-items:center;
+    background:var(--green-lt); color:var(--green-dk); }
+  .tutorial .step-icon svg { width:34px; height:34px; }
+  .tutorial h2 { font-family:'Sora',sans-serif; color:var(--ink); font-size:20px; margin-bottom:8px; font-weight:600; }
+  .tutorial p { color:var(--muted); line-height:1.6; margin-bottom:12px; font-size:14.5px; }
+  .tutorial .highlight { background:var(--green-lt); color:var(--green-dk); padding:1px 7px; border-radius:5px; font-weight:600; }
   .tutorial .nav { display:flex; gap:10px; justify-content:center; margin-top:18px; }
 
-  .win-banner { position:fixed; inset:0; background:rgba(61,40,23,0.75); display:none; align-items:center;
-    justify-content:center; z-index:101; backdrop-filter:blur(3px); }
+  .win-banner { position:fixed; inset:0; background:rgba(31,42,35,0.5); display:none; align-items:center;
+    justify-content:center; z-index:101; backdrop-filter:blur(6px); }
   .win-banner.show { display:flex; }
-  .win-card { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--gold-dk); border-radius:24px;
-    padding:36px; text-align:center; box-shadow:0 10px 0 var(--gold-dk),0 20px 40px rgba(0,0,0,0.4); animation:popIn 0.4s; }
-  @keyframes popIn { from{transform:scale(0.6);opacity:0;} to{transform:scale(1);opacity:1;} }
-  .win-card .trophy { font-size:76px; animation:ripeBob 1s ease-in-out infinite; }
-  .win-card h2 { color:var(--gold-dk); font-size:30px; margin:10px 0; font-weight:700; }
-  .win-card .scores { font-size:18px; color:var(--ink); margin:14px 0; font-weight:500; }
+  .win-card { padding:34px 40px; text-align:center; animation:popIn 0.35s cubic-bezier(0.2,0.8,0.3,1);
+    background:var(--panel); border:1px solid var(--line); border-radius:20px; box-shadow:var(--sh-lg); }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0;} to{transform:scale(1);opacity:1;} }
+  .win-card .trophy { width:76px; height:76px; margin:0 auto 8px; }
+  .win-card .trophy svg { width:76px; height:76px; }
+  .win-card h2 { font-family:'Sora',sans-serif; color:var(--ink); font-size:24px; margin:6px 0; font-weight:700; }
+  .win-card .scores { font-size:16px; color:var(--muted); margin:12px 0 18px; font-variant-numeric:tabular-nums; }
+  .win-card .scores b { color:var(--ink); }
 
   /* ===== Profile chip in header ===== */
-  .profile-chip { display:flex; align-items:center; gap:8px; background:linear-gradient(180deg,#fffdf5,#fff3d6);
-    border:3px solid var(--wood-dk); border-radius:14px; padding:5px 12px 5px 6px; cursor:pointer;
-    box-shadow:0 4px 0 var(--wood-dk); transition:all 0.1s; }
-  .profile-chip:hover { filter:brightness(1.05); }
-  .profile-chip:active { transform:translateY(3px); box-shadow:0 1px 0 var(--wood-dk); }
-  .profile-chip .pav { font-size:24px; line-height:1; }
-  .profile-chip .pinfo { display:flex; flex-direction:column; line-height:1.15; }
-  .profile-chip .pname { font-weight:700; font-size:14px; color:var(--wood-dk); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .profile-chip .pmeta { font-size:10px; color:var(--muted); font-weight:500; }
+  .profile-chip { display:flex; align-items:center; gap:9px; background:var(--panel);
+    border:1px solid var(--line); border-radius:11px; padding:5px 12px 5px 5px; cursor:pointer;
+    box-shadow:var(--sh-sm); transition:all 0.14s; }
+  .profile-chip:hover { border-color:var(--green); }
+  .avatar { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; color:#fff;
+    font-weight:700; font-size:14px; font-family:'Sora',sans-serif; flex:0 0 auto; }
+  .profile-chip .pinfo { display:flex; flex-direction:column; line-height:1.2; }
+  .profile-chip .pname { font-weight:600; font-size:13.5px; color:var(--ink); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .profile-chip .pmeta { font-size:10.5px; color:var(--faint); font-weight:500; }
 
   /* ===== Sign-in / profile-select overlay ===== */
-  .signin { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--wood); border-radius:24px;
-    padding:28px; max-width:560px; width:100%; box-shadow:0 10px 0 var(--wood-dk),0 20px 40px rgba(0,0,0,0.35);
-    text-align:center; max-height:90vh; overflow-y:auto; }
-  .signin h2 { color:var(--wood-dk); font-size:26px; font-weight:700; margin-bottom:4px; }
-  .signin .tagline { color:var(--muted); font-size:14px; margin-bottom:18px; font-weight:500; }
-  .profile-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-bottom:16px; }
-  .profile-card { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:16px; padding:14px 10px; cursor:pointer;
-    transition:all 0.12s; position:relative; }
-  .profile-card:hover { border-color:var(--green-dk); transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.15); }
-  .profile-card .av { font-size:42px; line-height:1; }
-  .profile-card .nm { font-weight:700; font-size:15px; color:var(--ink); margin-top:6px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .profile-card .st { font-size:11px; color:var(--muted); font-weight:500; margin-top:2px; }
-  .profile-card .lock { position:absolute; top:6px; right:8px; font-size:13px; }
-  .profile-card .del { position:absolute; top:4px; left:6px; font-size:14px; opacity:0; transition:opacity 0.15s;
-    background:none; border:none; cursor:pointer; }
+  .signin { padding:28px; max-width:540px; width:100%; text-align:center;
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:var(--sh-lg); max-height:90vh; overflow-y:auto; }
+  .signin h2 { font-family:'Sora',sans-serif; color:var(--ink); font-size:21px; font-weight:700; margin-bottom:4px; }
+  .signin .tagline { color:var(--muted); font-size:13.5px; margin-bottom:20px; }
+  .profile-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(148px,1fr)); gap:12px; margin-bottom:8px; text-align:left; }
+  .profile-card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; cursor:pointer;
+    transition:all 0.14s; position:relative; display:flex; align-items:center; gap:11px; }
+  .profile-card:hover { border-color:var(--green); box-shadow:var(--sh-sm); }
+  .profile-card .avatar { width:40px; height:40px; border-radius:11px; font-size:17px; }
+  .profile-card .pc-body { min-width:0; }
+  .profile-card .nm { font-weight:600; font-size:14px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .profile-card .st { font-size:11px; color:var(--faint); font-weight:500; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .profile-card .lock { position:absolute; top:8px; right:10px; opacity:0.5; }
+  .profile-card .lock svg { width:15px; height:15px; }
+  .profile-card .del { position:absolute; top:6px; right:8px; opacity:0; transition:opacity 0.15s;
+    background:none; border:none; cursor:pointer; color:var(--danger); font-size:15px; padding:2px; }
   .profile-card:hover .del { opacity:0.7; }
-  .profile-card.new-card { border-style:dashed; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--green-dk); }
-  .profile-card.new-card .av { font-size:38px; }
+  .profile-card.new-card { border-style:dashed; justify-content:center; color:var(--green-dk); font-weight:600; }
 
-  .signin .create-form { display:none; flex-direction:column; gap:14px; text-align:left; }
+  .signin .create-form { display:none; flex-direction:column; gap:16px; text-align:left; margin-top:8px; }
   .signin .create-form.show { display:flex; }
-  .signin .field label { display:block; font-weight:600; color:var(--wood-dk); font-size:13px; margin-bottom:6px; }
+  .signin .field label { display:block; font-weight:600; color:var(--ink); font-size:13px; margin-bottom:7px; }
   .signin input[type=text], .signin input[type=password] { font-family:inherit; width:100%; padding:11px 14px;
-    border-radius:12px; border:3px solid var(--wood-lt); font-size:15px; background:#fff; color:var(--ink); }
-  .avatar-pick { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
-  .avatar-opt { font-size:28px; padding:8px; border-radius:12px; border:3px solid transparent; cursor:pointer;
-    background:#fff; transition:all 0.1s; }
-  .avatar-opt:hover { background:var(--green-lt); }
-  .avatar-opt.selected { border-color:var(--green-dk); background:var(--green-lt); box-shadow:0 0 0 2px var(--gold); }
-  .signin .form-btns { display:flex; gap:10px; justify-content:center; margin-top:4px; }
-  .pin-note { font-size:11px; color:var(--muted); font-weight:400; }
+    border-radius:10px; border:1px solid var(--line); font-size:15px; background:var(--paper); color:var(--ink); }
+  .signin input:focus { outline:none; border-color:var(--green); }
+  .avatar-pick { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+  .avatar-opt { width:100%; aspect-ratio:1; border-radius:11px; border:2px solid transparent; cursor:pointer;
+    transition:all 0.12s; display:grid; place-items:center; color:#fff; font-weight:700; font-family:'Sora',sans-serif; }
+  .avatar-opt:hover { transform:scale(1.05); }
+  .avatar-opt.selected { box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--ink); }
+  .signin .form-btns { display:flex; gap:10px; justify-content:flex-end; margin-top:4px; }
+  .pin-note { font-size:11px; color:var(--faint); font-weight:400; }
 
   /* ===== Stats / achievements panel ===== */
-  .stats-panel { background:linear-gradient(180deg,#fffdf5,#fff3d6); border:6px solid var(--wood); border-radius:24px;
-    padding:28px; max-width:560px; width:100%; box-shadow:0 10px 0 var(--wood-dk),0 20px 40px rgba(0,0,0,0.35);
-    max-height:90vh; overflow-y:auto; }
-  .stats-panel .sp-head { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
-  .stats-panel .sp-av { font-size:52px; line-height:1; }
-  .stats-panel .sp-name { font-size:24px; font-weight:700; color:var(--wood-dk); }
-  .stats-panel .sp-sub { font-size:13px; color:var(--muted); font-weight:500; }
-  .stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
-  .stat-box { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:14px; padding:12px 8px; text-align:center; }
-  .stat-box .num { font-size:24px; font-weight:700; color:var(--green-dk); }
-  .stat-box .lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
-  .ach-title { font-weight:700; color:var(--wood-dk); font-size:16px; margin:10px 0 12px; text-align:left; }
-  .ach-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
-  .ach-item { background:#fffdf5; border:3px solid var(--wood-lt); border-radius:14px; padding:12px 8px; text-align:center;
-    opacity:0.4; filter:grayscale(1); transition:all 0.15s; }
-  .ach-item.earned { opacity:1; filter:none; border-color:var(--gold-dk); background:linear-gradient(180deg,#fffbe6,#fff3d6); }
-  .ach-item .aic { font-size:32px; line-height:1; }
-  .ach-item .anm { font-size:12px; font-weight:700; color:var(--ink); margin-top:5px; }
-  .ach-item .ade { font-size:10px; color:var(--muted); margin-top:3px; line-height:1.3; }
-  .sp-actions { display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .stats-panel { padding:28px; max-width:560px; width:100%;
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:var(--sh-lg); max-height:90vh; overflow-y:auto; }
+  .stats-panel .sp-head { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+  .stats-panel .sp-av { width:52px; height:52px; border-radius:14px; font-size:22px; }
+  .stats-panel .sp-name { font-family:'Sora',sans-serif; font-size:21px; font-weight:700; color:var(--ink); }
+  .stats-panel .sp-sub { font-size:13px; color:var(--muted); font-weight:500; margin-top:2px; }
+  .stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px; }
+  .stat-box { background:var(--paper); border:1px solid var(--line-2); border-radius:12px; padding:14px 8px; text-align:center; }
+  .stat-box .num { font-family:'Sora',sans-serif; font-size:22px; font-weight:700; color:var(--green-dk); font-variant-numeric:tabular-nums; }
+  .stat-box .lbl { font-size:10.5px; color:var(--muted); font-weight:600; margin-top:3px; text-transform:uppercase; letter-spacing:0.03em; }
+  .ach-title { font-family:'Sora',sans-serif; font-weight:600; color:var(--ink); font-size:14px; margin:8px 0 12px; }
+  .ach-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:10px; }
+  .ach-item { background:var(--paper); border:1px solid var(--line-2); border-radius:12px; padding:13px 8px; text-align:center;
+    opacity:0.55; transition:all 0.15s; }
+  .ach-item.earned { opacity:1; border-color:rgba(201,154,46,0.5); background:#fdfaf1; }
+  .ach-item .aic { height:32px; display:grid; place-items:center; }
+  .ach-item:not(.earned) .aic { filter:grayscale(1) opacity(0.7); }
+  .ach-item .anm { font-size:12px; font-weight:600; color:var(--ink); margin-top:7px; }
+  .ach-item .ade { font-size:10px; color:var(--faint); margin-top:3px; line-height:1.35; }
+  .sp-actions { display:flex; gap:10px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
 
   /* ===== Achievement toast ===== */
-  .toast-wrap { position:fixed; top:16px; right:16px; z-index:200; display:flex; flex-direction:column; gap:10px; }
-  .toast { background:linear-gradient(180deg,#fffbe6,#fff3d6); border:4px solid var(--gold-dk); border-radius:16px;
-    padding:12px 18px; box-shadow:0 6px 20px rgba(0,0,0,0.3); display:flex; align-items:center; gap:12px;
-    animation:toastIn 0.4s ease, toastOut 0.4s ease 3.4s forwards; min-width:240px; }
+  .toast-wrap { position:fixed; top:18px; right:18px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:12px;
+    padding:12px 16px; box-shadow:var(--sh-md); display:flex; align-items:center; gap:12px;
+    animation:toastIn 0.4s ease, toastOut 0.4s ease 3.4s forwards; min-width:250px; }
   @keyframes toastIn { from{transform:translateX(120%);opacity:0;} to{transform:translateX(0);opacity:1;} }
   @keyframes toastOut { to{transform:translateX(120%);opacity:0;} }
-  .toast .tic { font-size:34px; }
-  .toast .ttxt .tt1 { font-size:12px; color:var(--gold-dk); font-weight:700; }
-  .toast .ttxt .tt2 { font-size:15px; color:var(--ink); font-weight:700; }
-  .toast .ttxt .tt3 { font-size:11px; color:var(--muted); }
+  .toast .tic { width:34px; height:34px; display:grid; place-items:center; flex:0 0 auto; }
+  .toast .ttxt .tt1 { font-size:10px; color:var(--gold-dk); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
+  .toast .ttxt .tt2 { font-size:14.5px; color:var(--ink); font-weight:600; }
+  .toast .ttxt .tt3 { font-size:11px; color:var(--faint); }
 </style>
 </head>
 <body>
-<div class="cloud c1">☁️</div>
-<div class="cloud c2">☁️</div>
-<div class="cloud c3">☁️</div>
-
 <header>
   <div class="signboard">
-    <span class="leaf">🌾</span>
-    <h1>Kaggriculture</h1>
+    <div class="brand">
+      <span class="mark" id="brand-mark"></span>
+      <div>
+        <h1>Kaggri<span class="accent">culture</span></h1>
+        <div class="sub">Strategic farming · outgrow your rival</div>
+      </div>
+    </div>
     <div class="toolbar">
       <div class="profile-chip" id="profile-chip" title="View profile & stats">
-        <span class="pav" id="chip-av">🧑‍🌾</span>
+        <span class="avatar" id="chip-av">G</span>
         <span class="pinfo">
           <span class="pname" id="chip-name">Guest</span>
           <span class="pmeta" id="chip-meta">tap for stats</span>
         </span>
       </div>
-      <button class="wbtn" id="btn-sound">🔊</button>
-      <button class="wbtn gold" id="btn-help">❓ Help</button>
+      <button class="wbtn icon-only" id="btn-sound" title="Toggle sound"></button>
+      <button class="wbtn" id="btn-help"><span id="help-ic"></span> Help</button>
     </div>
   </div>
 </header>
 
 <main>
   <div class="setup">
-    <label>Mode:</label>
+    <label>Mode</label>
     <select id="sel-mode">
-      <option value="single">🤖 vs AI</option>
-      <option value="hotseat">👥 2 Players</option>
+      <option value="single">Solo vs AI</option>
+      <option value="hotseat">Two Players</option>
     </select>
-    <label>Level:</label>
+    <label>Level</label>
     <select id="sel-diff">
-      <option value="easy">🟢 Easy</option>
-      <option value="medium" selected>🟡 Medium</option>
-      <option value="hard">🔴 Hard</option>
+      <option value="easy">Easy</option>
+      <option value="medium" selected>Medium</option>
+      <option value="hard">Hard</option>
     </select>
-    <label>Seed:</label>
+    <label>Seed</label>
     <input type="number" id="in-seed" value="0" min="0" style="width:66px" />
-    <button class="wbtn" id="btn-new-game">🌱 New Game</button>
-    <button class="wbtn gold" id="btn-end-turn">⏭️ End Turn</button>
+    <button class="wbtn gold" id="btn-new-game">New Game</button>
+    <button class="wbtn" id="btn-end-turn">End Turn</button>
   </div>
 
   <div class="game-container">
     <div class="farm-panel active" id="farm-0">
       <div class="farm-header">
-        <h2 id="name-0">🧑‍🌾 Player 1</h2>
-        <div class="coin-badge">🪙 <span id="score-0">100</span></div>
+        <h2 id="name-0">Player 1</h2>
+        <div class="coin-badge"><span id="coin-ic-0"></span> <span id="score-0">100</span></div>
       </div>
       <div class="grid" id="grid-0"></div>
       <div class="stats">
-        <span class="k">💰 Money</span><span class="v" id="money-0">$100</span>
-        <span class="k">🌰 Seeds</span><span class="v" id="seeds-0">WHEAT 4</span>
-        <span class="k">📦 Shed</span><span class="v" id="shed-0">—</span>
-        <span class="k">📅 Day</span><span class="v" id="day-0">1 / 30</span>
+        <span class="k">Money</span><span class="v" id="money-0">$100</span>
+        <span class="k">Seeds</span><span class="v" id="seeds-0">Wheat 4</span>
+        <span class="k">Shed</span><span class="v" id="shed-0">—</span>
+        <span class="k">Day</span><span class="v" id="day-0">1 / 30</span>
       </div>
     </div>
 
     <div class="controls">
-      <h3>🎮 Controls</h3>
+      <h3>Controls</h3>
       <div class="keys">
         <div></div><div class="key">↑<br>W</div><div></div>
         <div class="key">←<br>A</div><div class="key center">Move</div><div class="key">→<br>D</div>
         <div></div><div class="key">↓<br>S</div><div></div>
       </div>
       <div class="crop-picker">
-        <span class="label">🌱 Crop to plant</span>
+        <span class="label">Crop to plant</span>
         <div class="crop-btns" id="crop-btns"></div>
       </div>
       <div class="actions">
-        <button id="btn-plant">🌱 Plant</button>
-        <button id="btn-water">💧 Water</button>
-        <button id="btn-harvest">🌾 Harvest</button>
-        <button id="btn-dig">⛏️ Dig</button>
-        <button id="btn-buy-seed">🛒 Buy</button>
-        <button id="btn-sell">💰 Sell</button>
+        <button id="btn-plant">Plant <span class="kbd">P</span></button>
+        <button id="btn-water">Water <span class="kbd">Q</span></button>
+        <button id="btn-harvest">Harvest <span class="kbd">E</span></button>
+        <button id="btn-dig">Dig <span class="kbd">X</span></button>
+        <button id="btn-buy-seed">Buy <span class="kbd">B</span></button>
+        <button id="btn-sell">Sell <span class="kbd">V</span></button>
       </div>
-      <div class="hint">Move onto a plot, then act.<br>Water daily for a bigger harvest! 💧</div>
+      <div class="hint">Move onto a plot, then act. Water daily for a bigger harvest.</div>
     </div>
 
     <div class="farm-panel" id="farm-1">
       <div class="farm-header">
-        <h2 id="name-1">🤖 Player 2 (AI)</h2>
-        <div class="coin-badge">🪙 <span id="score-1">100</span></div>
+        <h2 id="name-1">Player 2 (AI)</h2>
+        <div class="coin-badge"><span id="coin-ic-1"></span> <span id="score-1">100</span></div>
       </div>
       <div class="grid" id="grid-1"></div>
       <div class="stats">
-        <span class="k">💰 Money</span><span class="v" id="money-1">$100</span>
-        <span class="k">🌰 Seeds</span><span class="v" id="seeds-1">WHEAT 4</span>
-        <span class="k">📦 Shed</span><span class="v" id="shed-1">—</span>
-        <span class="k">📅 Day</span><span class="v" id="day-1">1 / 30</span>
+        <span class="k">Money</span><span class="v" id="money-1">$100</span>
+        <span class="k">Seeds</span><span class="v" id="seeds-1">Wheat 4</span>
+        <span class="k">Shed</span><span class="v" id="shed-1">—</span>
+        <span class="k">Day</span><span class="v" id="day-1">1 / 30</span>
       </div>
     </div>
   </div>
 
-  <div class="legend">
-    <span><i class="sw" style="background:linear-gradient(180deg,#c48a5a,#a0673a)"></i> Soil</span>
-    <span><i class="sw" style="background:linear-gradient(180deg,#d4f5b0,#e8f8d8)"></i> 🌱 Growing</span>
-    <span><i class="sw" style="background:linear-gradient(180deg,#fff59d,#ffe082)"></i> 🌾 Ripe</span>
-    <span><i class="sw" style="background:linear-gradient(180deg,#e6ee9c,#c0ca33)"></i> 🌿 Weed</span>
-    <span><i class="sw" style="border:4px solid #ff8f00"></i> 🧑‍🌾 You</span>
-    <span>💧 Watered</span>
-  </div>
+  <div class="legend" id="legend"></div>
 </main>
 
 <div class="overlay" id="tutorial-overlay">
   <div class="tutorial">
     <div class="dots" id="tut-dots"></div>
-    <div class="step-icon" id="tut-icon">🌾</div>
+    <div class="step-icon" id="tut-icon"></div>
     <h2 id="tut-title"></h2>
     <p id="tut-body"></p>
     <div class="nav">
       <button class="wbtn" id="tut-skip">Skip</button>
-      <button class="wbtn gold" id="tut-next">Next →</button>
+      <button class="wbtn gold" id="tut-next">Next</button>
     </div>
   </div>
 </div>
 
 <div class="win-banner" id="win-banner">
   <div class="win-card">
-    <div class="trophy" id="win-trophy">🏆</div>
+    <div class="trophy" id="win-trophy"></div>
     <h2 id="win-title">You Win!</h2>
     <div class="scores" id="win-scores"></div>
-    <button class="wbtn gold" id="win-again" style="font-size:16px;padding:12px 28px">🌱 Play Again</button>
+    <button class="wbtn gold" id="win-again" style="font-size:15px;padding:11px 26px">Play Again</button>
   </div>
 </div>
 
 <!-- Sign-in / profile select -->
 <div class="overlay" id="signin-overlay">
   <div class="signin">
-    <h2>🌾 Who's Farming?</h2>
+    <h2>Who's farming?</h2>
     <div class="tagline">Pick your farmer or create a new one — your progress saves on this device.</div>
     <div class="profile-grid" id="profile-grid"></div>
     <div class="create-form" id="create-form">
@@ -394,7 +407,7 @@
       </div>
       <div class="form-btns">
         <button class="wbtn" id="create-cancel">Back</button>
-        <button class="wbtn gold" id="create-confirm">🌱 Start Farming</button>
+        <button class="wbtn gold" id="create-confirm">Start Farming</button>
       </div>
     </div>
   </div>
@@ -403,7 +416,7 @@
 <!-- PIN prompt -->
 <div class="overlay" id="pin-overlay">
   <div class="signin" style="max-width:340px">
-    <h2 id="pin-title">🔒 Enter PIN</h2>
+    <h2 id="pin-title">Enter PIN</h2>
     <div class="tagline" id="pin-sub">This profile is locked.</div>
     <input type="password" id="pin-input" inputmode="numeric" maxlength="4" placeholder="••••"
       style="text-align:center;font-size:24px;letter-spacing:8px;margin-bottom:8px" />
@@ -419,17 +432,17 @@
 <div class="overlay" id="stats-overlay">
   <div class="stats-panel">
     <div class="sp-head">
-      <span class="sp-av" id="sp-av">🧑‍🌾</span>
+      <span class="avatar sp-av" id="sp-av">F</span>
       <div>
         <div class="sp-name" id="sp-name">Farmer</div>
         <div class="sp-sub" id="sp-sub"></div>
       </div>
     </div>
     <div class="stat-grid" id="stat-grid"></div>
-    <div class="ach-title">🏅 Achievements</div>
+    <div class="ach-title">Achievements</div>
     <div class="ach-grid" id="ach-grid"></div>
     <div class="sp-actions">
-      <button class="wbtn" id="sp-switch">🔄 Switch Farmer</button>
+      <button class="wbtn" id="sp-switch">Switch Farmer</button>
       <button class="wbtn" id="sp-close">Close</button>
     </div>
   </div>
@@ -439,9 +452,11 @@
 
 <script src="engine.js"></script>
 <script src="profiles.js"></script>
+<script src="icons.js"></script>
 <script>
 const K = window.Kaggriculture;
 const PR = window.Profiles;
+const IC = window.ICONS;
 const $ = id => document.getElementById(id);
 let env, mode, difficulty, currentPlayer = 0, selectedCrop = 'WHEAT', soundOn = true, audioCtx = null;
 let gStats = { harvests:0, crops:{}, earnings:0 };   // player-0 tracking for the active profile
@@ -477,19 +492,21 @@ function newGame(){
   mode=$('sel-mode').value;
   env=new K.Env(seed,2); currentPlayer=0;
   gStats={ harvests:0, crops:{}, earnings:0 }; gameRecorded=false;
-  $('name-0').textContent = (activeProfile? activeProfile.avatar+' '+activeProfile.name : '🧑‍🌾 Player 1');
-  $('name-1').textContent = mode==='single' ? '🤖 Player 2 (AI)' : '🧑‍🌾 Player 2';
+  $('name-0').innerHTML = activeProfile ? (avatarDisc(activeProfile,22)+' '+escapeHtml(activeProfile.name)) : 'Player 1';
+  $('name-1').textContent = mode==='single' ? 'Player 2 (AI)' : 'Player 2';
   buildCropButtons(); renderAll(); updateControls();
   $('win-banner').classList.remove('show');
 }
-const GLYPH={WHEAT:'🌾',CORN:'🌽',TOMATO:'🍅',RICE:'🌾'};
+const NAME={WHEAT:'Wheat',CORN:'Corn',TOMATO:'Tomato',RICE:'Rice'};
+function cropName(c){ return NAME[c]||c; }
 function buildCropButtons(){
   const box=$('crop-btns'); box.innerHTML='';
   Object.keys(K.MECH.crops).forEach(crop=>{
     const s=K.MECH.crops[crop];
     const b=document.createElement('button');
     b.className='crop-btn'+(crop===selectedCrop?' selected':'');
-    b.innerHTML=`${GLYPH[crop]||'🌱'} ${crop}<span class="price">$${s.seed_cost}→$${s.sell_price} · ${s.grow_days}d</span>`;
+    b.innerHTML=`${IC.crop(crop,true)}<span class="cb-body">${cropName(crop)}`+
+      `<span class="price">$${s.seed_cost} → $${s.sell_price} · ${s.grow_days}d</span></span>`;
     b.onclick=()=>{ selectedCrop=crop; buildCropButtons(); };
     box.appendChild(b);
   });
@@ -498,28 +515,31 @@ function buildCropButtons(){
 /* ===== RENDER ===== */
 function growDays(c){ return (K.MECH.crops[c]||{}).grow_days||2; }
 function tileView(t,day){
-  if(!t) return {cls:'empty',glyph:'',drop:false,age:''};
-  if(t.kind===K.P.KIND_WEED) return {cls:'weed',glyph:'🌿',drop:false,age:''};
+  if(!t) return {cls:'empty',icon:'',drop:false,age:''};
+  if(t.kind===K.P.KIND_WEED) return {cls:'weed',icon:IC.weed,drop:false,age:''};
   const age=day-t.planted_day, need=growDays(t.crop), ripe=age>=need;
-  return { cls: ripe?'plant ripe':'plant', glyph: ripe?(GLYPH[t.crop]||'🌾'):(age>=1?'🌱':'🌰'),
-    drop:!!t.watered_today, age:`${age}/${need}` };
+  const icon = ripe ? IC.crop(t.crop,true) : (age>=1 ? IC.sprout : IC.seed);
+  return { cls: ripe?'plant ripe':'plant', icon, drop:!!t.watered_today, age:`${age}/${need}` };
 }
+function farmerCell(){ return '<span style="width:30px;height:30px;display:grid;place-items:center">'+IC.farmer+'</span>'; }
 function renderFarm(p){
   const farm=env.farms[p], day=env.day, [fx,fy]=farm.farmer;
   const grid=$(`grid-${p}`); grid.innerHTML='';
   grid.style.gridTemplateColumns=`repeat(${farm.tiles.length}, 56px)`;
   farm.tiles.forEach((row,y)=>row.forEach((t,x)=>{
-    const v=tileView(t,day);
+    const v=tileView(t,day), isF=(x===fx&&y===fy);
     const d=document.createElement('div');
-    d.className=`tile ${v.cls}${x===fx&&y===fy?' farmer':''}`;
-    d.innerHTML=`<span class="emoji">${v.glyph}</span>${v.drop?'<span class="drop">💧</span>':''}${v.age?`<span class="age">${v.age}</span>`:''}`;
+    d.className=`tile ${v.cls}${isF?' farmer':''}`;
+    // farmer icon shows on empty/own tile; crop icon shows otherwise (farmer ring still marks position)
+    const content = (isF && v.cls==='empty') ? IC.farmer : (v.icon||'');
+    d.innerHTML=`${content}${v.drop?`<span class="drop">${IC.water}</span>`:''}${v.age?`<span class="age">${v.age}</span>`:''}`;
     d.onclick=()=>{ if(p===currentPlayer&&canControl()) moveAdjacent(p,x,y); };
     grid.appendChild(d);
   }));
   $(`score-${p}`).textContent=env.score(p).toFixed(0);
   $(`money-${p}`).textContent='$'+farm.money.toFixed(0);
-  $(`seeds-${p}`).textContent=Object.entries(farm.seeds).filter(([,v])=>v>0).map(([k,v])=>`${k} ${v}`).join(', ')||'—';
-  $(`shed-${p}`).textContent=Object.entries(farm.shed).filter(([,v])=>v>0).map(([k,v])=>`${k} ${v.toFixed(1)}`).join(', ')||'—';
+  $(`seeds-${p}`).textContent=Object.entries(farm.seeds).filter(([,v])=>v>0).map(([k,v])=>`${cropName(k)} ${v}`).join(', ')||'—';
+  $(`shed-${p}`).textContent=Object.entries(farm.shed).filter(([,v])=>v>0).map(([k,v])=>`${cropName(k)} ${v.toFixed(1)}`).join(', ')||'—';
   $(`day-${p}`).textContent=`${day} / ${K.MECH.max_days}`;
 }
 function renderAll(){
@@ -560,8 +580,8 @@ function applyAction(p,action){
   renderAll();
   const dMoney=env.farms[p].money-before.money;
   const dShed=sumShed(p)-before.shed;
-  if(dShed>0.01) floatOverFarmer(p,`+${dShed.toFixed(1)} 🌾`,'#2e7d32');
-  if(dMoney>0.01) floatOverFarmer(p,`+$${dMoney.toFixed(0)}`,'#ff8f00');
+  if(dShed>0.01) floatOverFarmer(p,`+${dShed.toFixed(1)}`,'#3a7d5c');
+  if(dMoney>0.01) floatOverFarmer(p,`+$${dMoney.toFixed(0)}`,'#c99a2e');
   // track player-0 progress for the active profile
   if(p===0){
     if(dShed>0.01){
@@ -599,11 +619,11 @@ function updateControls(){
 }
 function endGame(){
   const s0=env.score(0),s1=env.score(1),p1=s0>=s1;
-  $('win-trophy').textContent=p1?'🏆':'🤖';
+  $('win-trophy').innerHTML = IC.badge(p1?'trophy':'medal');
   $('win-title').textContent = mode==='single'
-    ? (p1?'You Beat the AI! 🎉':'The AI Won! 🤖')
-    : (s0===s1?"It's a Tie!":`Player ${p1?1:2} Wins! 🎉`);
-  $('win-scores').innerHTML=`Player 1: <b>${s0.toFixed(0)}</b> · ${mode==='single'?'AI':'Player 2'}: <b>${s1.toFixed(0)}</b>`;
+    ? (p1?'You beat the AI':'The AI won this round')
+    : (s0===s1?"It's a tie":`Player ${p1?1:2} wins`);
+  $('win-scores').innerHTML=`Player 1 <b>${s0.toFixed(0)}</b> &nbsp;·&nbsp; ${mode==='single'?'AI':'Player 2'} <b>${s1.toFixed(0)}</b>`;
   $('win-banner').classList.add('show'); (p1?SFX.win:SFX.lose)();
 
   // record into the active profile (player 0 = the signed-in farmer)
@@ -622,23 +642,23 @@ function endGame(){
 
 /* ===== TUTORIAL ===== */
 const TUT=[
-  {icon:'🌾',title:'Welcome to Kaggriculture!',body:'Grow crops and out-earn your rival over <span class="highlight">30 days</span>. Most coins wins! 🪙'},
-  {icon:'🧑‍🌾',title:'Move Your Farmer',body:'Use <span class="highlight">Arrow keys</span> or <span class="highlight">WASD</span> to walk. Or click a plot next to you.'},
-  {icon:'🌱',title:'Plant & Grow',body:'Pick a crop, stand on empty soil, press <span class="highlight">Plant</span>. Watch the age counter as it grows!'},
-  {icon:'💧',title:'Water Daily',body:'Stand on a crop and <span class="highlight">Water</span> it. Well-watered crops yield <span class="highlight">2× more</span>! 💧'},
-  {icon:'🌾',title:'Harvest & Sell',body:'When it glows gold, <span class="highlight">Harvest</span> into your shed, then <span class="highlight">Sell</span> for coins! 💰'},
-  {icon:'🌿',title:'Fight the Weeds',body:'Weeds pop up on empty plots. Stand on one and <span class="highlight">Dig</span> it out fast!'},
-  {icon:'🏆',title:"Let's Farm!",body:'<span class="highlight">Buy</span> more seeds anytime. <span class="highlight">End Turn</span> when done. Go win! 🎉'}
+  {icon:'wheat',title:'Welcome to Kaggriculture',body:'Grow crops and out-earn your rival over <span class="highlight">30 in-game days</span>. The highest total score wins.'},
+  {icon:'farmer',title:'Move your farmer',body:'Use <span class="highlight">Arrow keys</span> or <span class="highlight">WASD</span> to walk, or click a plot next to you.'},
+  {icon:'sprout',title:'Plant &amp; grow',body:'Pick a crop, stand on empty soil, and press <span class="highlight">Plant</span>. Each plot shows its growth age.'},
+  {icon:'water',title:'Irrigate daily',body:'Stand on a crop and <span class="highlight">Water</span> it. Well-watered crops yield up to <span class="highlight">2× more</span> at harvest.'},
+  {icon:'wheat',title:'Harvest &amp; sell',body:'When a crop matures, <span class="highlight">Harvest</span> it into your shed, then <span class="highlight">Sell</span> for income.'},
+  {icon:'weed',title:'Manage weeds',body:'Weeds appear on empty plots and block them. Stand on one and <span class="highlight">Dig</span> to clear it.'},
+  {icon:'trophy',title:'Ready to farm',body:'<span class="highlight">Buy</span> seeds anytime and <span class="highlight">End Turn</span> when finished. Good luck.'}
 ];
 let tutStep=0;
 function showTutorial(){ tutStep=0; renderTut(); $('tutorial-overlay').classList.add('show'); }
+function tutIcon(key){ return (key==='farmer'||key==='water'||key==='weed'||key==='sprout') ? IC[key] : IC.badge(key); }
 function renderTut(){
   const t=TUT[tutStep];
-  $('tut-icon').textContent=t.icon; $('tut-title').textContent=t.title; $('tut-body').innerHTML=t.body;
-  $('tut-next').textContent=tutStep===TUT.length-1?"Let's Farm! 🌱":'Next →';
+  $('tut-icon').innerHTML=tutIcon(t.icon); $('tut-title').textContent=t.title; $('tut-body').innerHTML=t.body;
+  $('tut-next').textContent=tutStep===TUT.length-1?"Start":'Next';
   const dots=$('tut-dots'); dots.innerHTML='';
   TUT.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===tutStep?' active':'');dots.appendChild(d);});
-  $('tut-icon').style.animation='none'; void $('tut-icon').offsetWidth; $('tut-icon').style.animation='hop 0.5s ease';
 }
 function nextTut(){ if(tutStep<TUT.length-1){tutStep++;renderTut();} else {$('tutorial-overlay').classList.remove('show');initAudio();} }
 
@@ -655,7 +675,7 @@ $('btn-sell').onclick=()=>{
   const ops=Object.entries(farm.shed).map(([c,a])=>[K.P.SELL,c,Math.floor(a)]).filter(o=>o[2]>0);
   if(ops.length) market(ops,SFX.sell);
 };
-$('btn-sound').onclick=()=>{ soundOn=!soundOn; $('btn-sound').textContent=soundOn?'🔊':'🔇'; if(soundOn){initAudio();beep(660,0.1,'sine',0.1);} };
+$('btn-sound').onclick=()=>{ soundOn=!soundOn; $('btn-sound').innerHTML=soundOn?IC.soundOn:IC.soundOff; if(soundOn){initAudio();beep(660,0.1,'sine',0.1);} };
 $('btn-help').onclick=showTutorial;
 $('tut-next').onclick=nextTut;
 $('tut-skip').onclick=()=>{ $('tutorial-overlay').classList.remove('show'); initAudio(); };
@@ -683,14 +703,24 @@ let activeProfile = null;
 let pendingProfileId = null;   // profile awaiting PIN
 let createAvatar = PR.AVATARS[0];
 
+function initial(name){ return (String(name||'?').trim()[0]||'?').toUpperCase(); }
+function avatarColor(p){ return (p&&p.avatar&&/^#/.test(p.avatar)) ? p.avatar : '#3a7d5c'; }
+// inline avatar disc for use inside another element (returns HTML string)
+function avatarDisc(p,size){ size=size||30;
+  return `<span class="avatar" style="background:${avatarColor(p)};width:${size}px;height:${size}px;font-size:${Math.round(size*0.46)}px">${initial(p.name)}</span>`; }
+// style an existing .avatar element in place
+function paintAvatar(el,p){ el.style.background=avatarColor(p); el.textContent=initial(p.name); }
+
 function updateChip(){
+  const el=$('chip-av');
   if(activeProfile){
-    $('chip-av').textContent=activeProfile.avatar;
+    paintAvatar(el,activeProfile);
     $('chip-name').textContent=activeProfile.name;
     const w=activeProfile.stats.wins, g=activeProfile.stats.games;
     $('chip-meta').textContent = g>0 ? `${w}W · ${g} games` : 'new farmer';
   } else {
-    $('chip-av').textContent='🧑‍🌾'; $('chip-name').textContent='Guest'; $('chip-meta').textContent='tap to sign in';
+    el.style.background='#8a968b'; el.textContent='G';
+    $('chip-name').textContent='Guest'; $('chip-meta').textContent='tap to sign in';
   }
 }
 
@@ -704,18 +734,20 @@ function buildProfileGrid(){
   const grid=$('profile-grid'); grid.innerHTML='';
   PR.list().forEach(p=>{
     const card=document.createElement('div'); card.className='profile-card';
-    card.innerHTML=`${p.pin?'<span class="lock">🔒</span>':''}
-      <button class="del" title="Delete">🗑️</button>
-      <div class="av">${p.avatar}</div>
-      <div class="nm">${escapeHtml(p.name)}</div>
-      <div class="st">${p.stats.wins}W / ${p.stats.games}G · best ${p.stats.bestScore.toFixed(0)}</div>`;
-    card.querySelector('.del').onclick=(e)=>{ e.stopPropagation();
+    card.innerHTML=`${p.pin?`<span class="lock">${IC.badge('lock')}</span>`:'<button class="del" title="Delete">✕</button>'}
+      ${avatarDisc(p,40)}
+      <div class="pc-body">
+        <div class="nm">${escapeHtml(p.name)}</div>
+        <div class="st">${p.stats.wins}W / ${p.stats.games}G · best ${p.stats.bestScore.toFixed(0)}</div>
+      </div>`;
+    const del=card.querySelector('.del');
+    if(del) del.onclick=(e)=>{ e.stopPropagation();
       if(confirm(`Delete farmer "${p.name}"? This erases their progress.`)){ PR.remove(p.id); buildProfileGrid(); } };
     card.onclick=()=>selectProfile(p.id);
     grid.appendChild(card);
   });
   const add=document.createElement('div'); add.className='profile-card new-card';
-  add.innerHTML=`<div class="av">➕</div><div class="nm">New Farmer</div>`;
+  add.innerHTML=`<span style="font-size:20px;line-height:1">+</span> New Farmer`;
   add.onclick=openCreateForm;
   grid.appendChild(add);
 }
@@ -724,12 +756,20 @@ function openCreateForm(){
   const pick=$('avatar-pick'); pick.innerHTML='';
   PR.AVATARS.forEach(av=>{
     const b=document.createElement('div'); b.className='avatar-opt'+(av===createAvatar?' selected':'');
-    b.textContent=av; b.onclick=()=>{ createAvatar=av;
-      [...pick.children].forEach(c=>c.classList.toggle('selected', c.textContent===av)); };
+    b.style.background=av; b.style.color=av; b.dataset.color=av;
+    b.textContent=''; // filled after we know the name
+    b.onclick=()=>{ createAvatar=av;
+      [...pick.children].forEach(c=>c.classList.toggle('selected', c.dataset.color===av)); };
     pick.appendChild(b);
   });
+  syncAvatarInitials();
+  $('new-name').oninput=syncAvatarInitials;
   $('create-form').classList.add('show');
   $('new-name').focus();
+}
+function syncAvatarInitials(){
+  const ini=initial($('new-name').value||'?');
+  [...$('avatar-pick').children].forEach(c=>{ c.textContent=ini; c.style.color='#fff'; });
 }
 function confirmCreate(){
   const name=$('new-name').value.trim()||'Farmer';
@@ -741,7 +781,7 @@ function confirmCreate(){
 }
 function selectProfile(id){
   const p=PR.get(id); if(!p) return;
-  if(p.pin){ pendingProfileId=id; $('pin-title').textContent=`🔒 ${p.name}`; $('pin-sub').textContent='Enter your 4-digit PIN.';
+  if(p.pin){ pendingProfileId=id; $('pin-title').textContent=`${p.name} · locked`; $('pin-sub').textContent='Enter your 4-digit PIN.';
     $('pin-input').value=''; $('pin-err').textContent=''; $('pin-overlay').classList.add('show'); $('pin-input').focus(); }
   else finishSelect(id);
 }
@@ -760,16 +800,16 @@ function confirmPin(){
 function openStats(){
   if(!activeProfile){ openSignin(); return; }
   const p=activeProfile, s=p.stats;
-  $('sp-av').textContent=p.avatar; $('sp-name').textContent=p.name;
-  $('sp-sub').textContent=`Win rate ${PR.winRate(p)}% · streak ${s.currentStreak} (best ${s.bestStreak})`;
+  paintAvatar($('sp-av'),p); $('sp-name').textContent=p.name;
+  $('sp-sub').textContent=`Win rate ${PR.winRate(p)}% · current streak ${s.currentStreak} (best ${s.bestStreak})`;
   const boxes=[
     ['Games',s.games],['Wins',s.wins],['Losses',s.losses],
-    ['Best Score',s.bestScore.toFixed(0)],['Harvests',s.totalHarvests],['Earned','$'+s.totalEarnings.toFixed(0)]
+    ['Best score',s.bestScore.toFixed(0)],['Harvests',s.totalHarvests],['Earned','$'+s.totalEarnings.toFixed(0)]
   ];
   $('stat-grid').innerHTML=boxes.map(b=>`<div class="stat-box"><div class="num">${b[1]}</div><div class="lbl">${b[0]}</div></div>`).join('');
   $('ach-grid').innerHTML=PR.ACHIEVEMENTS.map(a=>{
     const got=(p.achievements||[]).indexOf(a.id)!==-1;
-    return `<div class="ach-item${got?' earned':''}"><div class="aic">${got?a.icon:'🔒'}</div>
+    return `<div class="ach-item${got?' earned':''}"><div class="aic">${IC.badge(got?a.icon:'lock')}</div>
       <div class="anm">${a.name}</div><div class="ade">${a.desc}</div></div>`;
   }).join('');
   $('stats-overlay').classList.add('show');
@@ -779,8 +819,8 @@ function openStats(){
 function showToast(a){
   const wrap=$('toast-wrap');
   const t=document.createElement('div'); t.className='toast';
-  t.innerHTML=`<div class="tic">${a.icon}</div><div class="ttxt">
-    <div class="tt1">🏅 ACHIEVEMENT UNLOCKED</div><div class="tt2">${a.name}</div><div class="tt3">${a.desc}</div></div>`;
+  t.innerHTML=`<div class="tic">${IC.badge(a.icon)}</div><div class="ttxt">
+    <div class="tt1">Achievement unlocked</div><div class="tt2">${a.name}</div><div class="tt3">${a.desc}</div></div>`;
   wrap.appendChild(t);
   if(soundOn && audioCtx){ [784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,0.15,'triangle',0.15),i*80)); }
   setTimeout(()=>t.remove(),3900);
@@ -799,7 +839,26 @@ $('new-name').addEventListener('keydown',e=>{ if(e.key==='Enter')confirmCreate()
 $('sp-close').onclick=()=>$('stats-overlay').classList.remove('show');
 $('sp-switch').onclick=()=>{ $('stats-overlay').classList.remove('show'); openSignin(); };
 
+/* ===== STATIC ICONS ===== */
+function injectStaticIcons(){
+  // brand mark: a white wheat glyph on the green tile
+  $('brand-mark').innerHTML='<span style="color:#fff;display:grid;place-items:center">'+
+    IC.svg('<path d="M12 22V7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'+
+    '<g fill="#fff"><ellipse cx="12" cy="5" rx="1.7" ry="2.6"/>'+
+    '<ellipse cx="9.2" cy="8" rx="1.4" ry="2.3" transform="rotate(-28 9.2 8)"/>'+
+    '<ellipse cx="14.8" cy="8" rx="1.4" ry="2.3" transform="rotate(28 14.8 8)"/></g>',22)+'</span>';
+  $('help-ic').innerHTML=IC.help;
+  $('btn-sound').innerHTML=IC.soundOn;
+  $('coin-ic-0').innerHTML=IC.coin; $('coin-ic-1').innerHTML=IC.coin;
+  const items=[
+    [swSoil(),'Soil'],[IC.sprout,'Growing'],[IC.wheat,'Ripe'],[IC.weed,'Weed'],[IC.farmer,'You'],[IC.water,'Watered']
+  ];
+  $('legend').innerHTML=items.map(it=>`<span><i class="sw">${it[0]}</i> ${it[1]}</span>`).join('');
+}
+function swSoil(){ return ''; }
+
 /* ===== BOOT ===== */
+injectStaticIcons();
 activeProfile = PR.getActive();
 updateChip();
 newGame();

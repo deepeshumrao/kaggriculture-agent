@@ -15,25 +15,28 @@
   var STORE_KEY = "kagg_profiles_v1";
   var ACTIVE_KEY = "kagg_active_profile_v1";
 
-  var AVATARS = ["🧑‍🌾", "👩‍🌾", "👨‍🌾", "🧑‍🎤", "🦸", "🧙", "👷", "🕵️", "🐔", "🐄", "🐷", "🦊"];
+  // Avatars are refined color swatches; the UI renders a monogram disc from the
+  // player's initial on top of the chosen color (no emoji).
+  var AVATARS = ["#3a7d5c", "#2b6cb0", "#b7791f", "#9b3d5e", "#6b4fa0",
+                 "#2c7a7b", "#a8552c", "#4a5568", "#5a7d2c", "#8a3b3b"];
 
-  // Achievement catalog. `check(stats, ctx)` returns true when earned.
+  // Achievement catalog. `icon` is a key resolved by ICONS.badge() in the UI.
   var ACHIEVEMENTS = [
-    { id: "first_harvest", icon: "🌾", name: "First Harvest", desc: "Harvest your first crop.",
+    { id: "first_harvest", icon: "wheat", name: "First Harvest", desc: "Harvest your first crop.",
       check: function (s) { return s.totalHarvests >= 1; } },
-    { id: "first_win", icon: "🏆", name: "First Victory", desc: "Win your first game.",
+    { id: "first_win", icon: "trophy", name: "First Victory", desc: "Win your first game.",
       check: function (s) { return s.wins >= 1; } },
-    { id: "green_thumb", icon: "🌱", name: "Green Thumb", desc: "Harvest 100 crops in total.",
+    { id: "green_thumb", icon: "leaf", name: "Green Thumb", desc: "Harvest 100 crops in total.",
       check: function (s) { return s.totalHarvests >= 100; } },
-    { id: "rich_farmer", icon: "💰", name: "Rich Farmer", desc: "Finish a game with score 3000+.",
+    { id: "rich_farmer", icon: "coins", name: "Rich Farmer", desc: "Finish a game with score 3000+.",
       check: function (s) { return s.bestScore >= 3000; } },
-    { id: "veteran", icon: "🎖️", name: "Veteran", desc: "Play 10 games.",
+    { id: "veteran", icon: "medal", name: "Veteran", desc: "Play 10 games.",
       check: function (s) { return s.games >= 10; } },
-    { id: "streak3", icon: "🔥", name: "On Fire", desc: "Win 3 games in a row.",
+    { id: "streak3", icon: "flame", name: "On Fire", desc: "Win 3 games in a row.",
       check: function (s) { return s.bestStreak >= 3; } },
-    { id: "beat_hard", icon: "😤", name: "No Sweat", desc: "Beat the AI on Hard difficulty.",
+    { id: "beat_hard", icon: "shield", name: "No Sweat", desc: "Beat the AI on Hard difficulty.",
       check: function (s, c) { return c && c.won && c.difficulty === "hard" && c.mode === "single"; } },
-    { id: "crop_master", icon: "🍅", name: "Crop Master", desc: "Harvest every crop type at least once.",
+    { id: "crop_master", icon: "basket", name: "Crop Master", desc: "Harvest every crop type at least once.",
       check: function (s) { var k = Object.keys(s.cropsHarvested || {}); return k.length >= 4; } }
   ];
 
